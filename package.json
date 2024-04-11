@@ -1,5 +1,5 @@
 {
-  "name": "com.alianblank.gameframex.setting",
+  "name": "com.alianblank.gameframex.unity.setting",
   "displayName": "Game Frame X Setting",
   "category": "Game Framework X",
   "description": "Game Frame X Setting Component",
@@ -9,7 +9,7 @@
     "Game Framework X"
   ],
   "repository": {
-    "name": "com.alianblank.gameframex.setting",
+    "name": "com.alianblank.gameframex.unity.setting",
     "url": "https://github.com/AlianBlank/com.alianblank.gameframex.unity.setting.git",
     "type": "git"
   },
