@@ -13,7 +13,7 @@ using UnityEngine;
 namespace GameFrameX.Setting.Editor
 {
     [CustomEditor(typeof(SettingComponent))]
-    internal sealed class SettingComponentInspector : GameFrameworkInspector
+    internal sealed class SettingComponentInspector : ComponentTypeComponentInspector
     {
         private HelperInfo<SettingHelperBase> m_SettingHelperInfo = new HelperInfo<SettingHelperBase>("Setting");
 
@@ -64,17 +64,22 @@ namespace GameFrameX.Setting.Editor
         {
             base.OnCompileComplete();
 
-            RefreshTypeNames();
+            _RefreshTypeNames();
         }
 
-        private void OnEnable()
+        protected override void Enable()
         {
             m_SettingHelperInfo.Init(serializedObject);
 
-            RefreshTypeNames();
+            _RefreshTypeNames();
         }
 
-        private void RefreshTypeNames()
+        protected override void RefreshTypeNames()
+        {
+            RefreshComponentTypeNames(typeof(ISettingManager));
+        }
+
+        private void _RefreshTypeNames()
         {
             m_SettingHelperInfo.Refresh();
             serializedObject.ApplyModifiedProperties();
