@@ -40,7 +40,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         protected override void Awake()
         {
-            ImplementationComponentType = Type.GetType(componentType);
+            ImplementationComponentType = Utility.Assembly.GetType(componentType);
             InterfaceComponentType = typeof(ISettingManager);
             base.Awake();
             m_SettingManager = GameFrameworkEntry.GetModule<ISettingManager>();
