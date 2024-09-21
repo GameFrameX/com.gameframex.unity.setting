@@ -6,6 +6,7 @@
 //------------------------------------------------------------
 
 using GameFrameX;
+using GameFrameX.Runtime;
 
 namespace GameFrameX.Setting.Runtime
 {
