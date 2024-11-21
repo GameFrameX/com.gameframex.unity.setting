@@ -263,7 +263,7 @@ namespace GameFrameX.Setting.Runtime
         public override T GetObject<T>(string settingName, T defaultObj)
         {
             string json = GetString(settingName, null);
-            if (json == null)
+            if (json.IsNullOrWhiteSpace())
             {
                 return defaultObj;
             }
@@ -281,7 +281,7 @@ namespace GameFrameX.Setting.Runtime
         public override object GetObject(Type objectType, string settingName, object defaultObj)
         {
             string json = GetString(settingName, null);
-            if (json == null)
+            if (json.IsNullOrWhiteSpace())
             {
                 return defaultObj;
             }
