@@ -433,7 +433,7 @@ namespace GameFrameX.Setting.Runtime
         /// <typeparam name="T">要读取对象的类型。</typeparam>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的对象。</returns>
-        public T GetObject<T>(string settingName)
+        public T GetObject<T>(string settingName) where T : class, new()
         {
             if (m_SettingHelper == null)
             {
@@ -481,7 +481,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultObj">当指定的游戏配置项不存在时，返回此默认对象。</param>
         /// <returns>读取的对象。</returns>
-        public T GetObject<T>(string settingName, T defaultObj)
+        public T GetObject<T>(string settingName, T defaultObj) where T : class, new()
         {
             if (m_SettingHelper == null)
             {
@@ -529,7 +529,7 @@ namespace GameFrameX.Setting.Runtime
         /// <typeparam name="T">要写入对象的类型。</typeparam>
         /// <param name="settingName">要写入游戏配置项的名称。</param>
         /// <param name="obj">要写入的对象。</param>
-        public void SetObject<T>(string settingName, T obj)
+        public void SetObject<T>(string settingName, T obj) where T : class, new()
         {
             if (m_SettingHelper == null)
             {

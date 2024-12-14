@@ -18,10 +18,7 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 获取游戏配置项数量。
         /// </summary>
-        int Count
-        {
-            get;
-        }
+        int Count { get; }
 
         /// <summary>
         /// 设置游戏配置辅助器。
@@ -166,7 +163,7 @@ namespace GameFrameX.Setting.Runtime
         /// <typeparam name="T">要读取对象的类型。</typeparam>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的对象。</returns>
-        T GetObject<T>(string settingName);
+        T GetObject<T>(string settingName) where T : class, new();
 
         /// <summary>
         /// 从指定游戏配置项中读取对象。
@@ -183,7 +180,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultObj">当指定的游戏配置项不存在时，返回此默认对象。</param>
         /// <returns>读取的对象。</returns>
-        T GetObject<T>(string settingName, T defaultObj);
+        T GetObject<T>(string settingName, T defaultObj) where T : class, new();
 
         /// <summary>
         /// 从指定游戏配置项中读取对象。
@@ -200,7 +197,7 @@ namespace GameFrameX.Setting.Runtime
         /// <typeparam name="T">要写入对象的类型。</typeparam>
         /// <param name="settingName">要写入游戏配置项的名称。</param>
         /// <param name="obj">要写入的对象。</param>
-        void SetObject<T>(string settingName, T obj);
+        void SetObject<T>(string settingName, T obj) where T : class, new();
 
         /// <summary>
         /// 向指定游戏配置项写入对象。
