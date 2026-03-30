@@ -5,11 +5,9 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
 using System;
 using System.Collections.Generic;
 using GameFrameX.Runtime;
-using UnityEngine;
 
 namespace GameFrameX.Setting.Runtime
 {
@@ -44,8 +42,12 @@ namespace GameFrameX.Setting.Runtime
         /// <returns>是否保存游戏配置成功。</returns>
         public override bool Save()
         {
-            PlayerPrefs.Save();
+            #if UNITY_WEBGL && (ENABLE_DOUYIN_MINI_GAME || ENABLE_WECHAT_MINI_GAME)
             return true;
+            #else
+            UnityEngine.PlayerPrefs.Save();
+            return true;
+            #endif
         }
 
         /// <summary>
@@ -80,7 +82,13 @@ namespace GameFrameX.Setting.Runtime
         /// <returns>指定的游戏配置项是否存在。</returns>
         public override bool HasSetting(string settingName)
         {
-            return PlayerPrefs.HasKey(settingName);
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            return TTSDK.TTStorage.HasKeySync(settingName);
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            return WeChatWASM.WXSDKManagerHandler.Instance.StorageHasKeySync(settingName);
+            #else
+            return UnityEngine.PlayerPrefs.HasKey(settingName);
+            #endif
         }
 
         /// <summary>
@@ -90,13 +98,31 @@ namespace GameFrameX.Setting.Runtime
         /// <returns>是否移除指定游戏配置项成功。</returns>
         public override bool RemoveSetting(string settingName)
         {
-            if (!PlayerPrefs.HasKey(settingName))
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            if (!TTSDK.TTStorage.HasKeySync(settingName))
             {
                 return false;
             }
 
-            PlayerPrefs.DeleteKey(settingName);
+            TTSDK.TTStorage.DeleteKeySync(settingName);
             return true;
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            if (!WeChatWASM.WXSDKManagerHandler.Instance.StorageHasKeySync(settingName))
+            {
+                return false;
+            }
+
+            WeChatWASM.WXSDKManagerHandler.Instance.StorageDeleteKeySync(settingName);
+            return true;
+            #else
+            if (!UnityEngine.PlayerPrefs.HasKey(settingName))
+            {
+                return false;
+            }
+
+            UnityEngine.PlayerPrefs.DeleteKey(settingName);
+            return true;
+            #endif
         }
 
         /// <summary>
@@ -104,7 +130,13 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         public override void RemoveAllSettings()
         {
-            PlayerPrefs.DeleteAll();
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            TTSDK.TTStorage.DeleteAllSync();
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            WeChatWASM.WXSDKManagerHandler.Instance.StorageDeleteAllSync();
+            #else
+            UnityEngine.PlayerPrefs.DeleteAll();
+            #endif
         }
 
         /// <summary>
@@ -114,7 +146,13 @@ namespace GameFrameX.Setting.Runtime
         /// <returns>读取的布尔值。</returns>
         public override bool GetBool(string settingName)
         {
-            return PlayerPrefs.GetInt(settingName) != 0;
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            return TTSDK.TTStorage.GetIntSync(settingName, 0) != 0;
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetIntSync(settingName, 0) != 0;
+            #else
+            return UnityEngine.PlayerPrefs.GetInt(settingName) != 0;
+            #endif
         }
 
         /// <summary>
@@ -125,7 +163,13 @@ namespace GameFrameX.Setting.Runtime
         /// <returns>读取的布尔值。</returns>
         public override bool GetBool(string settingName, bool defaultValue)
         {
-            return PlayerPrefs.GetInt(settingName, defaultValue ? 1 : 0) != 0;
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            return TTSDK.TTStorage.GetIntSync(settingName, defaultValue ? 1 : 0) != 0;
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetIntSync(settingName, defaultValue ? 1 : 0) != 0;
+            #else
+            return UnityEngine.PlayerPrefs.GetInt(settingName, defaultValue ? 1 : 0) != 0;
+            #endif
         }
 
         /// <summary>
@@ -135,7 +179,13 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="value">要写入的布尔值。</param>
         public override void SetBool(string settingName, bool value)
         {
-            PlayerPrefs.SetInt(settingName, value ? 1 : 0);
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            TTSDK.TTStorage.SetIntSync(settingName, value ? 1 : 0);
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            WeChatWASM.WXSDKManagerHandler.Instance.StorageSetIntSync(settingName, value ? 1 : 0);
+            #else
+            UnityEngine.PlayerPrefs.SetInt(settingName, value ? 1 : 0);
+            #endif
         }
 
         /// <summary>
@@ -145,7 +195,13 @@ namespace GameFrameX.Setting.Runtime
         /// <returns>读取的整数值。</returns>
         public override int GetInt(string settingName)
         {
-            return PlayerPrefs.GetInt(settingName);
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            return TTSDK.TTStorage.GetIntSync(settingName, 0);
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetIntSync(settingName, 0);
+            #else
+            return UnityEngine.PlayerPrefs.GetInt(settingName);
+            #endif
         }
 
         /// <summary>
@@ -156,7 +212,13 @@ namespace GameFrameX.Setting.Runtime
         /// <returns>读取的整数值。</returns>
         public override int GetInt(string settingName, int defaultValue)
         {
-            return PlayerPrefs.GetInt(settingName, defaultValue);
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            return TTSDK.TTStorage.GetIntSync(settingName, defaultValue);
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetIntSync(settingName, defaultValue);
+            #else
+            return UnityEngine.PlayerPrefs.GetInt(settingName, defaultValue);
+            #endif
         }
 
         /// <summary>
@@ -166,7 +228,13 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="value">要写入的整数值。</param>
         public override void SetInt(string settingName, int value)
         {
-            PlayerPrefs.SetInt(settingName, value);
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            TTSDK.TTStorage.SetIntSync(settingName, value);
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            WeChatWASM.WXSDKManagerHandler.Instance.StorageSetIntSync(settingName, value);
+            #else
+            UnityEngine.PlayerPrefs.SetInt(settingName, value);
+            #endif
         }
 
         /// <summary>
@@ -176,7 +244,13 @@ namespace GameFrameX.Setting.Runtime
         /// <returns>读取的浮点数值。</returns>
         public override float GetFloat(string settingName)
         {
-            return PlayerPrefs.GetFloat(settingName);
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            return TTSDK.TTStorage.GetFloatSync(settingName, 0f);
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetFloatSync(settingName, 0f);
+            #else
+            return UnityEngine.PlayerPrefs.GetFloat(settingName);
+            #endif
         }
 
         /// <summary>
@@ -187,7 +261,13 @@ namespace GameFrameX.Setting.Runtime
         /// <returns>读取的浮点数值。</returns>
         public override float GetFloat(string settingName, float defaultValue)
         {
-            return PlayerPrefs.GetFloat(settingName, defaultValue);
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            return TTSDK.TTStorage.GetFloatSync(settingName, defaultValue);
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetFloatSync(settingName, defaultValue);
+            #else
+            return UnityEngine.PlayerPrefs.GetFloat(settingName, defaultValue);
+            #endif
         }
 
         /// <summary>
@@ -197,7 +277,13 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="value">要写入的浮点数值。</param>
         public override void SetFloat(string settingName, float value)
         {
-            PlayerPrefs.SetFloat(settingName, value);
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            TTSDK.TTStorage.SetFloatSync(settingName, value);
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            WeChatWASM.WXSDKManagerHandler.Instance.StorageSetFloatSync(settingName, value);
+            #else
+            UnityEngine.PlayerPrefs.SetFloat(settingName, value);
+            #endif
         }
 
         /// <summary>
@@ -207,7 +293,13 @@ namespace GameFrameX.Setting.Runtime
         /// <returns>读取的字符串值。</returns>
         public override string GetString(string settingName)
         {
-            return PlayerPrefs.GetString(settingName);
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            return TTSDK.TTStorage.GetStringSync(settingName, string.Empty);
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetStringSync(settingName, string.Empty);
+            #else
+            return UnityEngine.PlayerPrefs.GetString(settingName);
+            #endif
         }
 
         /// <summary>
@@ -218,7 +310,13 @@ namespace GameFrameX.Setting.Runtime
         /// <returns>读取的字符串值。</returns>
         public override string GetString(string settingName, string defaultValue)
         {
-            return PlayerPrefs.GetString(settingName, defaultValue);
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            return TTSDK.TTStorage.GetStringSync(settingName, defaultValue);
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetStringSync(settingName, defaultValue);
+            #else
+            return UnityEngine.PlayerPrefs.GetString(settingName, defaultValue);
+            #endif
         }
 
         /// <summary>
@@ -228,7 +326,13 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="value">要写入的字符串值。</param>
         public override void SetString(string settingName, string value)
         {
-            PlayerPrefs.SetString(settingName, value);
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            TTSDK.TTStorage.SetStringSync(settingName, value);
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            WeChatWASM.WXSDKManagerHandler.Instance.StorageSetStringSync(settingName, value);
+            #else
+            UnityEngine.PlayerPrefs.SetString(settingName, value);
+            #endif
         }
 
         /// <summary>
@@ -297,7 +401,13 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="obj">要写入的对象。</param>
         public override void SetObject<T>(string settingName, T obj)
         {
-            PlayerPrefs.SetString(settingName, Utility.Json.ToJson(obj));
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            TTSDK.TTStorage.SetStringSync(settingName, Utility.Json.ToJson(obj));
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            WeChatWASM.WXSDKManagerHandler.Instance.StorageSetStringSync(settingName, Utility.Json.ToJson(obj));
+            #else
+            UnityEngine.PlayerPrefs.SetString(settingName, Utility.Json.ToJson(obj));
+            #endif
         }
 
         /// <summary>
@@ -307,7 +417,13 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="obj">要写入的对象。</param>
         public override void SetObject(string settingName, object obj)
         {
-            PlayerPrefs.SetString(settingName, Utility.Json.ToJson(obj));
+            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+            TTSDK.TTStorage.SetStringSync(settingName, Utility.Json.ToJson(obj));
+            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+            WeChatWASM.WXSDKManagerHandler.Instance.StorageSetStringSync(settingName, Utility.Json.ToJson(obj));
+            #else
+            UnityEngine.PlayerPrefs.SetString(settingName, Utility.Json.ToJson(obj));
+            #endif
         }
     }
 }

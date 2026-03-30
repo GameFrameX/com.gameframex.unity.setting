@@ -1,7 +1,9 @@
 {
     "name": "GameFrameX.Setting.Runtime",
     "references": [
-        "GameFrameX.Runtime"
+        "GameFrameX.Runtime",
+        "Wx",
+        "TTWebGL"
     ],
     "rootNamespace": "GameFrameX.Setting.Runtime",
     "includePlatforms": [],
