@@ -1,4 +1,4 @@
-﻿//------------------------------------------------------------
+//------------------------------------------------------------
 // Game Framework
 // Copyright © 2013-2021 Jiang Yin. All rights reserved.
 // Homepage: https://gameframework.cn/
@@ -13,6 +13,7 @@ namespace GameFrameX.Setting.Runtime
     /// <summary>
     /// 游戏配置管理器接口。
     /// </summary>
+    [UnityEngine.Scripting.Preserve]
     public interface ISettingManager
     {
         /// <summary>
@@ -24,30 +25,35 @@ namespace GameFrameX.Setting.Runtime
         /// 设置游戏配置辅助器。
         /// </summary>
         /// <param name="settingHelper">游戏配置辅助器。</param>
+        [UnityEngine.Scripting.Preserve]
         void SetSettingHelper(ISettingHelper settingHelper);
 
         /// <summary>
         /// 加载游戏配置。
         /// </summary>
         /// <returns>是否加载游戏配置成功。</returns>
+        [UnityEngine.Scripting.Preserve]
         bool Load();
 
         /// <summary>
         /// 保存游戏配置。
         /// </summary>
         /// <returns>是否保存游戏配置成功。</returns>
+        [UnityEngine.Scripting.Preserve]
         bool Save();
 
         /// <summary>
         /// 获取所有游戏配置项的名称。
         /// </summary>
         /// <returns>所有游戏配置项的名称。</returns>
+        [UnityEngine.Scripting.Preserve]
         string[] GetAllSettingNames();
 
         /// <summary>
         /// 获取所有游戏配置项的名称。
         /// </summary>
         /// <param name="results">所有游戏配置项的名称。</param>
+        [UnityEngine.Scripting.Preserve]
         void GetAllSettingNames(List<string> results);
 
         /// <summary>
@@ -55,6 +61,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要检查游戏配置项的名称。</param>
         /// <returns>指定的游戏配置项是否存在。</returns>
+        [UnityEngine.Scripting.Preserve]
         bool HasSetting(string settingName);
 
         /// <summary>
@@ -62,11 +69,13 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要移除游戏配置项的名称。</param>
         /// <returns>是否移除指定游戏配置项成功。</returns>
+        [UnityEngine.Scripting.Preserve]
         bool RemoveSetting(string settingName);
 
         /// <summary>
         /// 清空所有游戏配置项。
         /// </summary>
+        [UnityEngine.Scripting.Preserve]
         void RemoveAllSettings();
 
         /// <summary>
@@ -74,6 +83,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的布尔值。</returns>
+        [UnityEngine.Scripting.Preserve]
         bool GetBool(string settingName);
 
         /// <summary>
@@ -82,6 +92,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
         /// <returns>读取的布尔值。</returns>
+        [UnityEngine.Scripting.Preserve]
         bool GetBool(string settingName, bool defaultValue);
 
         /// <summary>
@@ -89,6 +100,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要写入游戏配置项的名称。</param>
         /// <param name="value">要写入的布尔值。</param>
+        [UnityEngine.Scripting.Preserve]
         void SetBool(string settingName, bool value);
 
         /// <summary>
@@ -96,6 +108,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的整数值。</returns>
+        [UnityEngine.Scripting.Preserve]
         int GetInt(string settingName);
 
         /// <summary>
@@ -104,6 +117,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
         /// <returns>读取的整数值。</returns>
+        [UnityEngine.Scripting.Preserve]
         int GetInt(string settingName, int defaultValue);
 
         /// <summary>
@@ -111,6 +125,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要写入游戏配置项的名称。</param>
         /// <param name="value">要写入的整数值。</param>
+        [UnityEngine.Scripting.Preserve]
         void SetInt(string settingName, int value);
 
         /// <summary>
@@ -118,6 +133,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的浮点数值。</returns>
+        [UnityEngine.Scripting.Preserve]
         float GetFloat(string settingName);
 
         /// <summary>
@@ -126,6 +142,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
         /// <returns>读取的浮点数值。</returns>
+        [UnityEngine.Scripting.Preserve]
         float GetFloat(string settingName, float defaultValue);
 
         /// <summary>
@@ -133,6 +150,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要写入游戏配置项的名称。</param>
         /// <param name="value">要写入的浮点数值。</param>
+        [UnityEngine.Scripting.Preserve]
         void SetFloat(string settingName, float value);
 
         /// <summary>
@@ -140,6 +158,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的字符串值。</returns>
+        [UnityEngine.Scripting.Preserve]
         string GetString(string settingName);
 
         /// <summary>
@@ -148,6 +167,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
         /// <returns>读取的字符串值。</returns>
+        [UnityEngine.Scripting.Preserve]
         string GetString(string settingName, string defaultValue);
 
         /// <summary>
@@ -155,6 +175,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要写入游戏配置项的名称。</param>
         /// <param name="value">要写入的字符串值。</param>
+        [UnityEngine.Scripting.Preserve]
         void SetString(string settingName, string value);
 
         /// <summary>
@@ -163,6 +184,7 @@ namespace GameFrameX.Setting.Runtime
         /// <typeparam name="T">要读取对象的类型。</typeparam>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的对象。</returns>
+        [UnityEngine.Scripting.Preserve]
         T GetObject<T>(string settingName) where T : class, new();
 
         /// <summary>
@@ -171,6 +193,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="objectType">要读取对象的类型。</param>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的对象。</returns>
+        [UnityEngine.Scripting.Preserve]
         object GetObject(Type objectType, string settingName);
 
         /// <summary>
@@ -180,6 +203,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultObj">当指定的游戏配置项不存在时，返回此默认对象。</param>
         /// <returns>读取的对象。</returns>
+        [UnityEngine.Scripting.Preserve]
         T GetObject<T>(string settingName, T defaultObj) where T : class, new();
 
         /// <summary>
@@ -189,6 +213,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultObj">当指定的游戏配置项不存在时，返回此默认对象。</param>
         /// <returns>读取的对象。</returns>
+        [UnityEngine.Scripting.Preserve]
         object GetObject(Type objectType, string settingName, object defaultObj);
 
         /// <summary>
@@ -197,6 +222,7 @@ namespace GameFrameX.Setting.Runtime
         /// <typeparam name="T">要写入对象的类型。</typeparam>
         /// <param name="settingName">要写入游戏配置项的名称。</param>
         /// <param name="obj">要写入的对象。</param>
+        [UnityEngine.Scripting.Preserve]
         void SetObject<T>(string settingName, T obj) where T : class, new();
 
         /// <summary>
@@ -204,6 +230,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要写入游戏配置项的名称。</param>
         /// <param name="obj">要写入的对象。</param>
+        [UnityEngine.Scripting.Preserve]
         void SetObject(string settingName, object obj);
     }
 }

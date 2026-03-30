@@ -1,4 +1,4 @@
-﻿//------------------------------------------------------------
+//------------------------------------------------------------
 // Game Framework
 // Copyright © 2013-2021 Jiang Yin. All rights reserved.
 // Homepage: https://gameframework.cn/
@@ -14,6 +14,7 @@ namespace GameFrameX.Setting.Runtime
     /// <summary>
     /// PlayerPrefs 游戏配置辅助器。
     /// </summary>
+    [UnityEngine.Scripting.Preserve]
     public class PlayerPrefsSettingHelper : SettingHelperBase
     {
         /// <summary>
@@ -31,6 +32,7 @@ namespace GameFrameX.Setting.Runtime
         /// 加载游戏配置。
         /// </summary>
         /// <returns>是否加载游戏配置成功。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override bool Load()
         {
             return true;
@@ -40,6 +42,7 @@ namespace GameFrameX.Setting.Runtime
         /// 保存游戏配置。
         /// </summary>
         /// <returns>是否保存游戏配置成功。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override bool Save()
         {
             #if UNITY_WEBGL && (ENABLE_DOUYIN_MINI_GAME || ENABLE_WECHAT_MINI_GAME)
@@ -54,6 +57,7 @@ namespace GameFrameX.Setting.Runtime
         /// 获取所有游戏配置项的名称。
         /// </summary>
         /// <returns>所有游戏配置项的名称。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override string[] GetAllSettingNames()
         {
             Log.Warning("GetAllSettingNames is not supported.");
@@ -64,6 +68,7 @@ namespace GameFrameX.Setting.Runtime
         /// 获取所有游戏配置项的名称。
         /// </summary>
         /// <param name="results">所有游戏配置项的名称。</param>
+        [UnityEngine.Scripting.Preserve]
         public override void GetAllSettingNames(List<string> results)
         {
             if (results == null)
@@ -80,6 +85,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要检查游戏配置项的名称。</param>
         /// <returns>指定的游戏配置项是否存在。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override bool HasSetting(string settingName)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -96,6 +102,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要移除游戏配置项的名称。</param>
         /// <returns>是否移除指定游戏配置项成功。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override bool RemoveSetting(string settingName)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -128,6 +135,7 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 清空所有游戏配置项。
         /// </summary>
+        [UnityEngine.Scripting.Preserve]
         public override void RemoveAllSettings()
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -144,6 +152,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的布尔值。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override bool GetBool(string settingName)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -161,6 +170,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
         /// <returns>读取的布尔值。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override bool GetBool(string settingName, bool defaultValue)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -177,6 +187,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要写入游戏配置项的名称。</param>
         /// <param name="value">要写入的布尔值。</param>
+        [UnityEngine.Scripting.Preserve]
         public override void SetBool(string settingName, bool value)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -193,6 +204,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的整数值。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override int GetInt(string settingName)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -210,6 +222,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
         /// <returns>读取的整数值。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override int GetInt(string settingName, int defaultValue)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -226,6 +239,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要写入游戏配置项的名称。</param>
         /// <param name="value">要写入的整数值。</param>
+        [UnityEngine.Scripting.Preserve]
         public override void SetInt(string settingName, int value)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -242,6 +256,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的浮点数值。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override float GetFloat(string settingName)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -259,6 +274,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
         /// <returns>读取的浮点数值。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override float GetFloat(string settingName, float defaultValue)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -275,6 +291,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要写入游戏配置项的名称。</param>
         /// <param name="value">要写入的浮点数值。</param>
+        [UnityEngine.Scripting.Preserve]
         public override void SetFloat(string settingName, float value)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -291,6 +308,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的字符串值。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override string GetString(string settingName)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -308,6 +326,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
         /// <returns>读取的字符串值。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override string GetString(string settingName, string defaultValue)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -324,6 +343,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要写入游戏配置项的名称。</param>
         /// <param name="value">要写入的字符串值。</param>
+        [UnityEngine.Scripting.Preserve]
         public override void SetString(string settingName, string value)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -341,6 +361,7 @@ namespace GameFrameX.Setting.Runtime
         /// <typeparam name="T">要读取对象的类型。</typeparam>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的对象。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override T GetObject<T>(string settingName)
         {
             return Utility.Json.ToObject<T>(GetString(settingName));
@@ -352,6 +373,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="objectType">要读取对象的类型。</param>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的对象。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override object GetObject(Type objectType, string settingName)
         {
             return Utility.Json.ToObject(objectType, GetString(settingName));
@@ -364,6 +386,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultObj">当指定的游戏配置项不存在时，返回此默认对象。</param>
         /// <returns>读取的对象。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override T GetObject<T>(string settingName, T defaultObj)
         {
             string json = GetString(settingName, null);
@@ -382,6 +405,7 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultObj">当指定的游戏配置项不存在时，返回此默认对象。</param>
         /// <returns>读取的对象。</returns>
+        [UnityEngine.Scripting.Preserve]
         public override object GetObject(Type objectType, string settingName, object defaultObj)
         {
             string json = GetString(settingName, null);
@@ -399,6 +423,7 @@ namespace GameFrameX.Setting.Runtime
         /// <typeparam name="T">要写入对象的类型。</typeparam>
         /// <param name="settingName">要写入游戏配置项的名称。</param>
         /// <param name="obj">要写入的对象。</param>
+        [UnityEngine.Scripting.Preserve]
         public override void SetObject<T>(string settingName, T obj)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
@@ -415,6 +440,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要写入游戏配置项的名称。</param>
         /// <param name="obj">要写入的对象。</param>
+        [UnityEngine.Scripting.Preserve]
         public override void SetObject(string settingName, object obj)
         {
             #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME

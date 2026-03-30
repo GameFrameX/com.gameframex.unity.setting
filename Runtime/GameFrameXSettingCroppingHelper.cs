@@ -1,12 +1,11 @@
 using UnityEngine;
-using UnityEngine.Scripting;
 
 namespace GameFrameX.Setting.Runtime
 {
-    [Preserve]
+    [UnityEngine.Scripting.Preserve]
     public class GameFrameXSettingCroppingHelper : MonoBehaviour
     {
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         private void Start()
         {
             _ = typeof(DefaultSetting);
