@@ -1,3 +1,15 @@
+# [1.2.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.1.0...1.2.0) (2026-03-30)
+
+
+### Bug Fixes
+
+* 为设置模块添加Preserve属性防止代码裁剪 ([0a0d521](https://github.com/gameframex/com.gameframex.unity.setting/commit/0a0d5216e4436833fc983557877c0ddfd06a8eeb))
+
+
+### Features
+
+* **setting:** 支持抖音和微信小游戏平台存储适配 ([e23ae2d](https://github.com/gameframex/com.gameframex.unity.setting/commit/e23ae2de25476cd4edf3ca32386f8191b1d259d1))
+
 # [1.1.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.0.4...1.1.0) (2025-12-23)
 
 
