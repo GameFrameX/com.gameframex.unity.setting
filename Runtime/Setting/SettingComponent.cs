@@ -46,7 +46,7 @@ namespace GameFrameX.Setting.Runtime
     {
         private ISettingManager m_SettingManager = null;
 
-        [SerializeField] private string m_SettingHelperTypeName = "UnityGameFramework.Runtime.DefaultSettingHelper";
+        [SerializeField] private string m_SettingHelperTypeName = "GameFrameX.Setting.Runtime.PlayerPrefsSettingHelper";
 
         [SerializeField] private SettingHelperBase m_CustomSettingHelper = null;
 
