@@ -41,7 +41,7 @@ namespace GameFrameX.Setting.Runtime
     /// </summary>
     [UnityEngine.Scripting.Preserve]
     [DisallowMultipleComponent]
-    [AddComponentMenu("Game Framework/Setting")]
+    [AddComponentMenu("GameFrameX/Setting")]
     public sealed class SettingComponent : GameFrameworkComponent
     {
         private ISettingManager m_SettingManager = null;
