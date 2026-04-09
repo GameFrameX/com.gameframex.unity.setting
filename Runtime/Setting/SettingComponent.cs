@@ -39,6 +39,7 @@ namespace GameFrameX.Setting.Runtime
     /// </summary>
     [UnityEngine.Scripting.Preserve]
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(GameFrameXSettingCroppingHelper))]
     [AddComponentMenu("GameFrameX/Setting")]
     public sealed class SettingComponent : GameFrameworkComponent
     {
