@@ -1,3 +1,15 @@
+# [1.3.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.2.0...1.3.0) (2026-04-09)
+
+
+### Bug Fixes
+
+* **Setting:** 将默认设置助手类型更改为 PlayerPrefsSettingHelper ([bb2052d](https://github.com/gameframex/com.gameframex.unity.setting/commit/bb2052d3dc5b0a54997cdfe763fa4af511db6975))
+
+
+### Features
+
+* **setting:** 增加快手小游戏平台的存储支持 ([795dc44](https://github.com/gameframex/com.gameframex.unity.setting/commit/795dc44d10c36e0e4af8027e000ba3f53867eb3b))
+
 # [1.2.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.1.0...1.2.0) (2026-03-30)
 
 
