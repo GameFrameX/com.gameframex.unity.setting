@@ -27,8 +27,6 @@
 //   Official Documentation: https://gameframex.doc.alianblank.com/
 //  ==========================================================================================
 
-using GameFrameX;
-using GameFrameX.Setting;
 using System;
 using System.Collections.Generic;
 using GameFrameX.Runtime;
