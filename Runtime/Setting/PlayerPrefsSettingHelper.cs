@@ -44,10 +44,7 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         public override int Count
         {
-            get
-            {
-                return -1;
-            }
+            get { return -1; }
         }
 
         /// <summary>
@@ -67,12 +64,12 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override bool Save()
         {
-            #if UNITY_WEBGL && (ENABLE_DOUYIN_MINI_GAME || ENABLE_WECHAT_MINI_GAME)
+#if UNITY_WEBGL && (ENABLE_DOUYIN_MINI_GAME || ENABLE_WECHAT_MINI_GAME || ENABLE_KUAISHOU_MINI_GAME)
             return true;
-            #else
+#else
             UnityEngine.PlayerPrefs.Save();
             return true;
-            #endif
+#endif
         }
 
         /// <summary>
@@ -110,13 +107,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override bool HasSetting(string settingName)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.HasKeySync(settingName);
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             return WeChatWASM.WXSDKManagerHandler.Instance.StorageHasKeySync(settingName);
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            return KSWASM.KSBase.StorageHasKeySync(settingName);
+#else
             return UnityEngine.PlayerPrefs.HasKey(settingName);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -127,7 +126,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override bool RemoveSetting(string settingName)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             if (!TTSDK.TTStorage.HasKeySync(settingName))
             {
                 return false;
@@ -135,7 +134,7 @@ namespace GameFrameX.Setting.Runtime
 
             TTSDK.TTStorage.DeleteKeySync(settingName);
             return true;
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             if (!WeChatWASM.WXSDKManagerHandler.Instance.StorageHasKeySync(settingName))
             {
                 return false;
@@ -143,7 +142,15 @@ namespace GameFrameX.Setting.Runtime
 
             WeChatWASM.WXSDKManagerHandler.Instance.StorageDeleteKeySync(settingName);
             return true;
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            if (!KSWASM.KSBase.StorageHasKeySync(settingName))
+            {
+                return false;
+            }
+
+            KSWASM.KSBase.StorageDeleteKeySync(settingName);
+            return true;
+#else
             if (!UnityEngine.PlayerPrefs.HasKey(settingName))
             {
                 return false;
@@ -151,7 +158,7 @@ namespace GameFrameX.Setting.Runtime
 
             UnityEngine.PlayerPrefs.DeleteKey(settingName);
             return true;
-            #endif
+#endif
         }
 
         /// <summary>
@@ -160,13 +167,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void RemoveAllSettings()
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             TTSDK.TTStorage.DeleteAllSync();
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             WeChatWASM.WXSDKManagerHandler.Instance.StorageDeleteAllSync();
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            KSWASM.KSBase.StorageDeleteAllSync();
+#else
             UnityEngine.PlayerPrefs.DeleteAll();
-            #endif
+#endif
         }
 
         /// <summary>
@@ -177,13 +186,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override bool GetBool(string settingName)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetIntSync(settingName, 0) != 0;
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetIntSync(settingName, 0) != 0;
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            return KSWASM.KSBase.StorageGetIntSync(settingName, 0) != 0;
+#else
             return UnityEngine.PlayerPrefs.GetInt(settingName) != 0;
-            #endif
+#endif
         }
 
         /// <summary>
@@ -195,13 +206,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override bool GetBool(string settingName, bool defaultValue)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetIntSync(settingName, defaultValue ? 1 : 0) != 0;
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetIntSync(settingName, defaultValue ? 1 : 0) != 0;
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            return KSWASM.KSBase.StorageGetIntSync(settingName, defaultValue ? 1 : 0) != 0;
+#else
             return UnityEngine.PlayerPrefs.GetInt(settingName, defaultValue ? 1 : 0) != 0;
-            #endif
+#endif
         }
 
         /// <summary>
@@ -212,13 +225,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetBool(string settingName, bool value)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             TTSDK.TTStorage.SetIntSync(settingName, value ? 1 : 0);
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             WeChatWASM.WXSDKManagerHandler.Instance.StorageSetIntSync(settingName, value ? 1 : 0);
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            KSWASM.KSBase.StorageSetIntSync(settingName, value ? 1 : 0);
+#else
             UnityEngine.PlayerPrefs.SetInt(settingName, value ? 1 : 0);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -229,13 +244,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override int GetInt(string settingName)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetIntSync(settingName, 0);
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetIntSync(settingName, 0);
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            return KSWASM.KSBase.StorageGetIntSync(settingName, 0);
+#else
             return UnityEngine.PlayerPrefs.GetInt(settingName);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -247,13 +264,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override int GetInt(string settingName, int defaultValue)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetIntSync(settingName, defaultValue);
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetIntSync(settingName, defaultValue);
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            return KSWASM.KSBase.StorageGetIntSync(settingName, defaultValue);
+#else
             return UnityEngine.PlayerPrefs.GetInt(settingName, defaultValue);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -264,13 +283,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetInt(string settingName, int value)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             TTSDK.TTStorage.SetIntSync(settingName, value);
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             WeChatWASM.WXSDKManagerHandler.Instance.StorageSetIntSync(settingName, value);
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            KSWASM.KSBase.StorageSetIntSync(settingName, value);
+#else
             UnityEngine.PlayerPrefs.SetInt(settingName, value);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -281,13 +302,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override float GetFloat(string settingName)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetFloatSync(settingName, 0f);
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetFloatSync(settingName, 0f);
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            return KSWASM.KSBase.StorageGetFloatSync(settingName, 0f);
+#else
             return UnityEngine.PlayerPrefs.GetFloat(settingName);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -299,13 +322,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override float GetFloat(string settingName, float defaultValue)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetFloatSync(settingName, defaultValue);
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetFloatSync(settingName, defaultValue);
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            return KSWASM.KSBase.StorageGetFloatSync(settingName, defaultValue);
+#else
             return UnityEngine.PlayerPrefs.GetFloat(settingName, defaultValue);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -316,13 +341,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetFloat(string settingName, float value)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             TTSDK.TTStorage.SetFloatSync(settingName, value);
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             WeChatWASM.WXSDKManagerHandler.Instance.StorageSetFloatSync(settingName, value);
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            KSWASM.KSBase.StorageSetFloatSync(settingName, value);
+#else
             UnityEngine.PlayerPrefs.SetFloat(settingName, value);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -333,13 +360,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override string GetString(string settingName)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetStringSync(settingName, string.Empty);
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetStringSync(settingName, string.Empty);
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            return KSWASM.KSBase.StorageGetStringSync(settingName, string.Empty);
+#else
             return UnityEngine.PlayerPrefs.GetString(settingName);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -351,13 +380,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override string GetString(string settingName, string defaultValue)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetStringSync(settingName, defaultValue);
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetStringSync(settingName, defaultValue);
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            return KSWASM.KSBase.StorageGetStringSync(settingName, defaultValue);
+#else
             return UnityEngine.PlayerPrefs.GetString(settingName, defaultValue);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -368,13 +399,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetString(string settingName, string value)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             TTSDK.TTStorage.SetStringSync(settingName, value);
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             WeChatWASM.WXSDKManagerHandler.Instance.StorageSetStringSync(settingName, value);
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            KSWASM.KSBase.StorageSetStringSync(settingName, value);
+#else
             UnityEngine.PlayerPrefs.SetString(settingName, value);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -448,13 +481,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetObject<T>(string settingName, T obj)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             TTSDK.TTStorage.SetStringSync(settingName, Utility.Json.ToJson(obj));
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             WeChatWASM.WXSDKManagerHandler.Instance.StorageSetStringSync(settingName, Utility.Json.ToJson(obj));
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            KSWASM.KSBase.StorageSetStringSync(settingName, Utility.Json.ToJson(obj));
+#else
             UnityEngine.PlayerPrefs.SetString(settingName, Utility.Json.ToJson(obj));
-            #endif
+#endif
         }
 
         /// <summary>
@@ -465,13 +500,15 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetObject(string settingName, object obj)
         {
-            #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
+#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             TTSDK.TTStorage.SetStringSync(settingName, Utility.Json.ToJson(obj));
-            #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
+#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
             WeChatWASM.WXSDKManagerHandler.Instance.StorageSetStringSync(settingName, Utility.Json.ToJson(obj));
-            #else
+#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
+            KSWASM.KSBase.StorageSetStringSync(settingName, Utility.Json.ToJson(obj));
+#else
             UnityEngine.PlayerPrefs.SetString(settingName, Utility.Json.ToJson(obj));
-            #endif
+#endif
         }
     }
 }
