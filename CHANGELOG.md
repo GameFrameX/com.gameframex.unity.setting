@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.3.0...1.4.0) (2026-04-12)
+
+
+### Features
+
+* **setting:** 为Unity编辑器环境添加PlayerPrefs支持 ([ee4c460](https://github.com/gameframex/com.gameframex.unity.setting/commit/ee4c4602d6975ed289cfa43c8400f42df192b984))
+
 # [1.3.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.2.0...1.3.0) (2026-04-09)
 
 
