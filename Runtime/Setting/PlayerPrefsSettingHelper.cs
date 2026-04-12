@@ -122,8 +122,6 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 检查是否存在指定游戏配置项。
         /// </summary>
-        /// <param name="settingName">要检查游戏配置项的名称。</param>
-        /// <returns>指定的游戏配置项是否存在。</returns>
         /// <remarks>
         /// Checks whether the specified game setting exists.
         /// </remarks>
@@ -132,6 +130,9 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override bool HasSetting(string settingName)
         {
+#if UNITY_EDITOR
+            return UnityEngine.PlayerPrefs.HasKey(settingName);
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.HasKeySync(settingName);
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -146,8 +147,6 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 移除指定游戏配置项。
         /// </summary>
-        /// <param name="settingName">要移除游戏配置项的名称。</param>
-        /// <returns>是否移除指定游戏配置项成功。</returns>
         /// <remarks>
         /// Removes the specified game setting.
         /// </remarks>
@@ -156,6 +155,16 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override bool RemoveSetting(string settingName)
         {
+#if UNITY_EDITOR
+            if (!UnityEngine.PlayerPrefs.HasKey(settingName))
+            {
+                return false;
+            }
+
+            UnityEngine.PlayerPrefs.DeleteKey(settingName);
+            return true;
+#endif
+
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             if (!TTSDK.TTStorage.HasKeySync(settingName))
             {
@@ -200,6 +209,10 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void RemoveAllSettings()
         {
+#if UNITY_EDITOR
+            UnityEngine.PlayerPrefs.DeleteAll();
+            return;
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             TTSDK.TTStorage.DeleteAllSync();
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -214,8 +227,6 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取布尔值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <returns>读取的布尔值。</returns>
         /// <remarks>
         /// Reads a boolean value from the specified game setting.
         /// </remarks>
@@ -224,6 +235,9 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override bool GetBool(string settingName)
         {
+#if UNITY_EDITOR
+            return UnityEngine.PlayerPrefs.GetInt(settingName) != 0;
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetIntSync(settingName, 0) != 0;
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -272,6 +286,10 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetBool(string settingName, bool value)
         {
+#if UNITY_EDITOR
+            UnityEngine.PlayerPrefs.SetInt(settingName, value ? 1 : 0);
+            return;
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             TTSDK.TTStorage.SetIntSync(settingName, value ? 1 : 0);
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -294,6 +312,9 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override int GetInt(string settingName)
         {
+#if UNITY_EDITOR
+            return UnityEngine.PlayerPrefs.GetInt(settingName);
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetIntSync(settingName, 0);
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -317,6 +338,9 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override int GetInt(string settingName, int defaultValue)
         {
+#if UNITY_EDITOR
+            return UnityEngine.PlayerPrefs.GetInt(settingName, defaultValue);
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetIntSync(settingName, defaultValue);
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -339,6 +363,10 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetInt(string settingName, int value)
         {
+#if UNITY_EDITOR
+            UnityEngine.PlayerPrefs.SetInt(settingName, value);
+            return;
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             TTSDK.TTStorage.SetIntSync(settingName, value);
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -361,6 +389,9 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override float GetFloat(string settingName)
         {
+#if UNITY_EDITOR
+            return UnityEngine.PlayerPrefs.GetFloat(settingName);
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetFloatSync(settingName, 0f);
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -375,9 +406,6 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取浮点数值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
-        /// <returns>读取的浮点数值。</returns>
         /// <remarks>
         /// Reads a float value from the specified game setting.
         /// </remarks>
@@ -387,6 +415,9 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override float GetFloat(string settingName, float defaultValue)
         {
+#if UNITY_EDITOR
+            return UnityEngine.PlayerPrefs.GetFloat(settingName, defaultValue);
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetFloatSync(settingName, defaultValue);
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -409,6 +440,10 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetFloat(string settingName, float value)
         {
+#if UNITY_EDITOR
+            UnityEngine.PlayerPrefs.SetFloat(settingName, value);
+            return;
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             TTSDK.TTStorage.SetFloatSync(settingName, value);
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -431,6 +466,9 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override string GetString(string settingName)
         {
+#if UNITY_EDITOR
+            return UnityEngine.PlayerPrefs.GetString(settingName, string.Empty);
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetStringSync(settingName, string.Empty);
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -438,7 +476,7 @@ namespace GameFrameX.Setting.Runtime
 #elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
             return KSWASM.KSBase.StorageGetStringSync(settingName, string.Empty);
 #else
-            return UnityEngine.PlayerPrefs.GetString(settingName);
+            return UnityEngine.PlayerPrefs.GetString(settingName, string.Empty);
 #endif
         }
 
@@ -454,6 +492,9 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override string GetString(string settingName, string defaultValue)
         {
+#if UNITY_EDITOR
+            return UnityEngine.PlayerPrefs.GetString(settingName, defaultValue);
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetStringSync(settingName, defaultValue);
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -476,6 +517,11 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetString(string settingName, string value)
         {
+#if UNITY_EDITOR
+            UnityEngine.PlayerPrefs.SetString(settingName, value);
+            return;
+#endif
+
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             TTSDK.TTStorage.SetStringSync(settingName, value);
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -573,6 +619,10 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetObject<T>(string settingName, T obj)
         {
+#if UNITY_EDITOR
+            UnityEngine.PlayerPrefs.SetString(settingName, Utility.Json.ToJson(obj));
+            return;
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             TTSDK.TTStorage.SetStringSync(settingName, Utility.Json.ToJson(obj));
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -595,6 +645,10 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetObject(string settingName, object obj)
         {
+#if UNITY_EDITOR
+            UnityEngine.PlayerPrefs.SetString(settingName, Utility.Json.ToJson(obj));
+            return;
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             TTSDK.TTStorage.SetStringSync(settingName, Utility.Json.ToJson(obj));
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
