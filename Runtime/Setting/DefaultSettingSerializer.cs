@@ -1,4 +1,4 @@
-﻿// ==========================================================================================
+// ==========================================================================================
 //   GameFrameX 组织及其衍生项目的版权、商标、专利及其他相关权利
 //   GameFrameX organization and its derivative projects' copyrights, trademarks, patents, and related rights
 //   均受中华人民共和国及相关国际法律法规保护。
@@ -34,6 +34,9 @@ namespace GameFrameX.Setting.Runtime
     /// <summary>
     /// 默认游戏配置序列化器。
     /// </summary>
+    /// <remarks>
+    /// Default game setting serializer.
+    /// </remarks>
     [UnityEngine.Scripting.Preserve]
     public sealed class DefaultSettingSerializer : GameFrameworkSerializer<DefaultSetting>
     {
@@ -42,6 +45,9 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 初始化默认游戏配置序列化器的新实例。
         /// </summary>
+        /// <remarks>
+        /// Initializes a new instance of the default game setting serializer.
+        /// </remarks>
         [UnityEngine.Scripting.Preserve]
         public DefaultSettingSerializer()
         {
@@ -50,7 +56,10 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 获取默认游戏配置头标识。
         /// </summary>
-        /// <returns>默认游戏配置头标识。</returns>
+        /// <remarks>
+        /// Gets the header bytes that identify the default game setting format.
+        /// </remarks>
+        /// <returns>默认游戏配置头标识字节数组 / Header byte array of the default game setting format</returns>
         protected override byte[] GetHeader()
         {
             return Header;

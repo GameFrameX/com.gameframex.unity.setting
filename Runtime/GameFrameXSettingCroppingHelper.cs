@@ -31,9 +31,21 @@ using UnityEngine;
 
 namespace GameFrameX.Setting.Runtime
 {
+    /// <summary>
+    /// 游戏配置裁剪辅助器，用于防止代码裁剪时移除必要的类型引用。
+    /// </summary>
+    /// <remarks>
+    /// Setting cropping helper that prevents code stripping from removing necessary type references.
+    /// </remarks>
     [UnityEngine.Scripting.Preserve]
     public class GameFrameXSettingCroppingHelper : MonoBehaviour
     {
+        /// <summary>
+        /// 在启动时引用所有相关类型，确保它们不会被裁剪。
+        /// </summary>
+        /// <remarks>
+        /// References all related types at startup to ensure they are not stripped.
+        /// </remarks>
         [UnityEngine.Scripting.Preserve]
         private void Start()
         {

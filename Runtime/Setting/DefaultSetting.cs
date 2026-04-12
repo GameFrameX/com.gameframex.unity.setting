@@ -1,4 +1,4 @@
-﻿// ==========================================================================================
+// ==========================================================================================
 //   GameFrameX 组织及其衍生项目的版权、商标、专利及其他相关权利
 //   GameFrameX organization and its derivative projects' copyrights, trademarks, patents, and related rights
 //   均受中华人民共和国及相关国际法律法规保护。
@@ -40,6 +40,9 @@ namespace GameFrameX.Setting.Runtime
     /// <summary>
     /// 默认游戏配置。
     /// </summary>
+    /// <remarks>
+    /// Default game setting implementation.
+    /// </remarks>
     [UnityEngine.Scripting.Preserve]
     public sealed class DefaultSetting
     {
@@ -48,12 +51,19 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 获取游戏配置项数量。
         /// </summary>
+        /// <remarks>
+        /// Gets the number of game settings.
+        /// </remarks>
+        /// <value>游戏配置项数量 / Number of game settings</value>
         public int Count => m_Settings.Count;
 
         /// <summary>
         /// 获取所有游戏配置项的名称。
         /// </summary>
-        /// <returns>所有游戏配置项的名称。</returns>
+        /// <remarks>
+        /// Gets all game setting names.
+        /// </remarks>
+        /// <returns>所有游戏配置项的名称 / Array of all game setting names</returns>
         [UnityEngine.Scripting.Preserve]
         public string[] GetAllSettingNames()
         {
@@ -70,7 +80,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 获取所有游戏配置项的名称。
         /// </summary>
-        /// <param name="results">所有游戏配置项的名称。</param>
+        /// <remarks>
+        /// Gets all game setting names.
+        /// </remarks>
+        /// <param name="results">所有游戏配置项的名称列表 / List to store all game setting names</param>
+        /// <exception cref="GameFrameworkException">当 <paramref name="results"/> 为 null 时抛出 / Thrown when <paramref name="results"/> is null</exception>
         [UnityEngine.Scripting.Preserve]
         public void GetAllSettingNames(List<string> results)
         {
@@ -89,8 +103,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 检查是否存在指定游戏配置项。
         /// </summary>
-        /// <param name="settingName">要检查游戏配置项的名称。</param>
-        /// <returns>指定的游戏配置项是否存在。</returns>
+        /// <remarks>
+        /// Checks whether the specified game setting exists.
+        /// </remarks>
+        /// <param name="settingName">要检查游戏配置项的名称 / Name of the game setting to check</param>
+        /// <returns>指定的游戏配置项是否存在 / Whether the specified game setting exists</returns>
         [UnityEngine.Scripting.Preserve]
         public bool HasSetting(string settingName)
         {
@@ -100,8 +117,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 移除指定游戏配置项。
         /// </summary>
-        /// <param name="settingName">要移除游戏配置项的名称。</param>
-        /// <returns>是否移除指定游戏配置项成功。</returns>
+        /// <remarks>
+        /// Removes the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要移除游戏配置项的名称 / Name of the game setting to remove</param>
+        /// <returns>是否移除指定游戏配置项成功 / Whether the specified game setting was removed successfully</returns>
         [UnityEngine.Scripting.Preserve]
         public bool RemoveSetting(string settingName)
         {
@@ -111,6 +131,9 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 清空所有游戏配置项。
         /// </summary>
+        /// <remarks>
+        /// Removes all game settings.
+        /// </remarks>
         [UnityEngine.Scripting.Preserve]
         public void RemoveAllSettings()
         {
@@ -120,8 +143,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取布尔值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <returns>读取的布尔值。</returns>
+        /// <remarks>
+        /// Reads a boolean value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <returns>读取的布尔值 / The read boolean value</returns>
         [UnityEngine.Scripting.Preserve]
         public bool GetBool(string settingName)
         {
@@ -137,9 +163,12 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取布尔值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
-        /// <returns>读取的布尔值。</returns>
+        /// <remarks>
+        /// Reads a boolean value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值 / Default value returned when the specified setting does not exist</param>
+        /// <returns>读取的布尔值 / The read boolean value</returns>
         [UnityEngine.Scripting.Preserve]
         public bool GetBool(string settingName, bool defaultValue)
         {
@@ -154,8 +183,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 向指定游戏配置项写入布尔值。
         /// </summary>
-        /// <param name="settingName">要写入游戏配置项的名称。</param>
-        /// <param name="value">要写入的布尔值。</param>
+        /// <remarks>
+        /// Writes a boolean value to the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要写入游戏配置项的名称 / Name of the game setting to write</param>
+        /// <param name="value">要写入的布尔值 / Boolean value to write</param>
         [UnityEngine.Scripting.Preserve]
         public void SetBool(string settingName, bool value)
         {
@@ -165,8 +197,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取整数值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <returns>读取的整数值。</returns>
+        /// <remarks>
+        /// Reads an integer value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <returns>读取的整数值 / The read integer value</returns>
         [UnityEngine.Scripting.Preserve]
         public int GetInt(string settingName)
         {
@@ -182,9 +217,12 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取整数值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
-        /// <returns>读取的整数值。</returns>
+        /// <remarks>
+        /// Reads an integer value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值 / Default value returned when the specified setting does not exist</param>
+        /// <returns>读取的整数值 / The read integer value</returns>
         [UnityEngine.Scripting.Preserve]
         public int GetInt(string settingName, int defaultValue)
         {
@@ -199,8 +237,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 向指定游戏配置项写入整数值。
         /// </summary>
-        /// <param name="settingName">要写入游戏配置项的名称。</param>
-        /// <param name="value">要写入的整数值。</param>
+        /// <remarks>
+        /// Writes an integer value to the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要写入游戏配置项的名称 / Name of the game setting to write</param>
+        /// <param name="value">要写入的整数值 / Integer value to write</param>
         [UnityEngine.Scripting.Preserve]
         public void SetInt(string settingName, int value)
         {
@@ -210,8 +251,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取浮点数值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <returns>读取的浮点数值。</returns>
+        /// <remarks>
+        /// Reads a float value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <returns>读取的浮点数值 / The read float value</returns>
         [UnityEngine.Scripting.Preserve]
         public float GetFloat(string settingName)
         {
@@ -227,9 +271,12 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取浮点数值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
-        /// <returns>读取的浮点数值。</returns>
+        /// <remarks>
+        /// Reads a float value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值 / Default value returned when the specified setting does not exist</param>
+        /// <returns>读取的浮点数值 / The read float value</returns>
         [UnityEngine.Scripting.Preserve]
         public float GetFloat(string settingName, float defaultValue)
         {
@@ -244,8 +291,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 向指定游戏配置项写入浮点数值。
         /// </summary>
-        /// <param name="settingName">要写入游戏配置项的名称。</param>
-        /// <param name="value">要写入的浮点数值。</param>
+        /// <remarks>
+        /// Writes a float value to the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要写入游戏配置项的名称 / Name of the game setting to write</param>
+        /// <param name="value">要写入的浮点数值 / Float value to write</param>
         [UnityEngine.Scripting.Preserve]
         public void SetFloat(string settingName, float value)
         {
@@ -255,8 +305,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取字符串值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <returns>读取的字符串值。</returns>
+        /// <remarks>
+        /// Reads a string value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <returns>读取的字符串值 / The read string value</returns>
         [UnityEngine.Scripting.Preserve]
         public string GetString(string settingName)
         {
@@ -272,9 +325,12 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取字符串值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
-        /// <returns>读取的字符串值。</returns>
+        /// <remarks>
+        /// Reads a string value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值 / Default value returned when the specified setting does not exist</param>
+        /// <returns>读取的字符串值 / The read string value</returns>
         [UnityEngine.Scripting.Preserve]
         public string GetString(string settingName, string defaultValue)
         {
@@ -289,8 +345,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 向指定游戏配置项写入字符串值。
         /// </summary>
-        /// <param name="settingName">要写入游戏配置项的名称。</param>
-        /// <param name="value">要写入的字符串值。</param>
+        /// <remarks>
+        /// Writes a string value to the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要写入游戏配置项的名称 / Name of the game setting to write</param>
+        /// <param name="value">要写入的字符串值 / String value to write</param>
         [UnityEngine.Scripting.Preserve]
         public void SetString(string settingName, string value)
         {
@@ -300,7 +359,10 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 序列化数据。
         /// </summary>
-        /// <param name="stream">目标流。</param>
+        /// <remarks>
+        /// Serializes the settings data to the specified stream.
+        /// </remarks>
+        /// <param name="stream">目标流 / Target stream to write serialized data</param>
         [UnityEngine.Scripting.Preserve]
         public void Serialize(Stream stream)
         {
@@ -318,7 +380,10 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 反序列化数据。
         /// </summary>
-        /// <param name="stream">指定流。</param>
+        /// <remarks>
+        /// Deserializes the settings data from the specified stream.
+        /// </remarks>
+        /// <param name="stream">指定流 / Source stream to read serialized data from</param>
         [UnityEngine.Scripting.Preserve]
         public void Deserialize(Stream stream)
         {
