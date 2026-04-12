@@ -619,19 +619,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetObject<T>(string settingName, T obj)
         {
-#if UNITY_EDITOR
-            UnityEngine.PlayerPrefs.SetString(settingName, Utility.Json.ToJson(obj));
-            return;
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            TTSDK.TTStorage.SetStringSync(settingName, Utility.Json.ToJson(obj));
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            WeChatWASM.WXSDKManagerHandler.Instance.StorageSetStringSync(settingName, Utility.Json.ToJson(obj));
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            KSWASM.KSBase.StorageSetStringSync(settingName, Utility.Json.ToJson(obj));
-#else
-            UnityEngine.PlayerPrefs.SetString(settingName, Utility.Json.ToJson(obj));
-#endif
+            SetString(settingName, Utility.Json.ToJson(obj));
         }
 
         /// <summary>
@@ -645,19 +633,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetObject(string settingName, object obj)
         {
-#if UNITY_EDITOR
-            UnityEngine.PlayerPrefs.SetString(settingName, Utility.Json.ToJson(obj));
-            return;
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            TTSDK.TTStorage.SetStringSync(settingName, Utility.Json.ToJson(obj));
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            WeChatWASM.WXSDKManagerHandler.Instance.StorageSetStringSync(settingName, Utility.Json.ToJson(obj));
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            KSWASM.KSBase.StorageSetStringSync(settingName, Utility.Json.ToJson(obj));
-#else
-            UnityEngine.PlayerPrefs.SetString(settingName, Utility.Json.ToJson(obj));
-#endif
+            SetString(settingName, Utility.Json.ToJson(obj));
         }
     }
 }
