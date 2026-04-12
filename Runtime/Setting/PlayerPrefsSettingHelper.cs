@@ -34,23 +34,33 @@ using GameFrameX.Runtime;
 namespace GameFrameX.Setting.Runtime
 {
     /// <summary>
-    /// PlayerPrefs 游戏配置辅助器。
+    /// PlayerPrefs 游戏配置辅助器，基于 Unity PlayerPrefs 实现游戏配置的读写操作。
     /// </summary>
+    /// <remarks>
+    /// PlayerPrefs game setting helper that implements game setting read/write operations based on Unity PlayerPrefs.
+    /// </remarks>
     [UnityEngine.Scripting.Preserve]
     public class PlayerPrefsSettingHelper : SettingHelperBase
     {
         /// <summary>
-        /// 获取游戏配置项数量。
+        /// 获取游戏配置项数量。PlayerPrefs 不支持获取配置项数量，始终返回 -1。
         /// </summary>
+        /// <remarks>
+        /// Gets the number of game settings. PlayerPrefs does not support counting settings, always returns -1.
+        /// </remarks>
+        /// <value>始终返回 -1 / Always returns -1</value>
         public override int Count
         {
             get { return -1; }
         }
 
         /// <summary>
-        /// 加载游戏配置。
+        /// 加载游戏配置。PlayerPrefs 不需要显式加载，始终返回成功。
         /// </summary>
-        /// <returns>是否加载游戏配置成功。</returns>
+        /// <remarks>
+        /// Loads game settings. PlayerPrefs does not require explicit loading, always returns success.
+        /// </remarks>
+        /// <returns>始终返回 <c>true</c> / Always returns <c>true</c></returns>
         [UnityEngine.Scripting.Preserve]
         public override bool Load()
         {
@@ -60,7 +70,10 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 保存游戏配置。
         /// </summary>
-        /// <returns>是否保存游戏配置成功。</returns>
+        /// <remarks>
+        /// Saves game settings. On WebGL mini-game platforms (Douyin/WeChat/Kuaiishou), this is a no-op.
+        /// </remarks>
+        /// <returns>是否保存游戏配置成功 / Whether the settings were saved successfully</returns>
         [UnityEngine.Scripting.Preserve]
         public override bool Save()
         {
@@ -73,9 +86,12 @@ namespace GameFrameX.Setting.Runtime
         }
 
         /// <summary>
-        /// 获取所有游戏配置项的名称。
+        /// 获取所有游戏配置项的名称。PlayerPrefs 不支持此操作。
         /// </summary>
-        /// <returns>所有游戏配置项的名称。</returns>
+        /// <remarks>
+        /// Gets all game setting names. PlayerPrefs does not support this operation.
+        /// </remarks>
+        /// <returns>始终返回 <c>null</c> / Always returns <c>null</c></returns>
         [UnityEngine.Scripting.Preserve]
         public override string[] GetAllSettingNames()
         {
@@ -84,9 +100,13 @@ namespace GameFrameX.Setting.Runtime
         }
 
         /// <summary>
-        /// 获取所有游戏配置项的名称。
+        /// 获取所有游戏配置项的名称。PlayerPrefs 不支持此操作。
         /// </summary>
-        /// <param name="results">所有游戏配置项的名称。</param>
+        /// <remarks>
+        /// Gets all game setting names. PlayerPrefs does not support this operation.
+        /// </remarks>
+        /// <param name="results">所有游戏配置项的名称列表 / List to store all game setting names</param>
+        /// <exception cref="GameFrameworkException">当 <paramref name="results"/> 为 null 时抛出 / Thrown when <paramref name="results"/> is null</exception>
         [UnityEngine.Scripting.Preserve]
         public override void GetAllSettingNames(List<string> results)
         {
@@ -104,6 +124,11 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要检查游戏配置项的名称。</param>
         /// <returns>指定的游戏配置项是否存在。</returns>
+        /// <remarks>
+        /// Checks whether the specified game setting exists.
+        /// </remarks>
+        /// <param name="settingName">要检查游戏配置项的名称 / Name of the game setting to check</param>
+        /// <returns>指定的游戏配置项是否存在 / Whether the specified game setting exists</returns>
         [UnityEngine.Scripting.Preserve]
         public override bool HasSetting(string settingName)
         {
@@ -123,6 +148,11 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要移除游戏配置项的名称。</param>
         /// <returns>是否移除指定游戏配置项成功。</returns>
+        /// <remarks>
+        /// Removes the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要移除游戏配置项的名称 / Name of the game setting to remove</param>
+        /// <returns>是否移除指定游戏配置项成功 / Whether the specified game setting was removed successfully</returns>
         [UnityEngine.Scripting.Preserve]
         public override bool RemoveSetting(string settingName)
         {
@@ -164,6 +194,9 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 清空所有游戏配置项。
         /// </summary>
+        /// <remarks>
+        /// Removes all game settings.
+        /// </remarks>
         [UnityEngine.Scripting.Preserve]
         public override void RemoveAllSettings()
         {
@@ -183,6 +216,11 @@ namespace GameFrameX.Setting.Runtime
         /// </summary>
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <returns>读取的布尔值。</returns>
+        /// <remarks>
+        /// Reads a boolean value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <returns>读取的布尔值 / The read boolean value</returns>
         [UnityEngine.Scripting.Preserve]
         public override bool GetBool(string settingName)
         {
@@ -200,12 +238,18 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取布尔值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
-        /// <returns>读取的布尔值。</returns>
+        /// <remarks>
+        /// Reads a boolean value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值 / Default value returned when the specified setting does not exist</param>
+        /// <returns>读取的布尔值 / The read boolean value</returns>
         [UnityEngine.Scripting.Preserve]
         public override bool GetBool(string settingName, bool defaultValue)
         {
+#if UNITY_EDITOR
+            return UnityEngine.PlayerPrefs.GetInt(settingName, defaultValue ? 1 : 0) != 0;
+#endif
 #if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
             return TTSDK.TTStorage.GetIntSync(settingName, defaultValue ? 1 : 0) != 0;
 #elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
@@ -220,8 +264,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 向指定游戏配置项写入布尔值。
         /// </summary>
-        /// <param name="settingName">要写入游戏配置项的名称。</param>
-        /// <param name="value">要写入的布尔值。</param>
+        /// <remarks>
+        /// Writes a boolean value to the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要写入游戏配置项的名称 / Name of the game setting to write</param>
+        /// <param name="value">要写入的布尔值 / Boolean value to write</param>
         [UnityEngine.Scripting.Preserve]
         public override void SetBool(string settingName, bool value)
         {
@@ -239,8 +286,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取整数值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <returns>读取的整数值。</returns>
+        /// <remarks>
+        /// Reads an integer value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <returns>读取的整数值 / The read integer value</returns>
         [UnityEngine.Scripting.Preserve]
         public override int GetInt(string settingName)
         {
@@ -258,9 +308,12 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取整数值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
-        /// <returns>读取的整数值。</returns>
+        /// <remarks>
+        /// Reads an integer value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值 / Default value returned when the specified setting does not exist</param>
+        /// <returns>读取的整数值 / The read integer value</returns>
         [UnityEngine.Scripting.Preserve]
         public override int GetInt(string settingName, int defaultValue)
         {
@@ -278,8 +331,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 向指定游戏配置项写入整数值。
         /// </summary>
-        /// <param name="settingName">要写入游戏配置项的名称。</param>
-        /// <param name="value">要写入的整数值。</param>
+        /// <remarks>
+        /// Writes an integer value to the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要写入游戏配置项的名称 / Name of the game setting to write</param>
+        /// <param name="value">要写入的整数值 / Integer value to write</param>
         [UnityEngine.Scripting.Preserve]
         public override void SetInt(string settingName, int value)
         {
@@ -297,8 +353,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取浮点数值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <returns>读取的浮点数值。</returns>
+        /// <remarks>
+        /// Reads a float value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <returns>读取的浮点数值 / The read float value</returns>
         [UnityEngine.Scripting.Preserve]
         public override float GetFloat(string settingName)
         {
@@ -319,6 +378,12 @@ namespace GameFrameX.Setting.Runtime
         /// <param name="settingName">要获取游戏配置项的名称。</param>
         /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
         /// <returns>读取的浮点数值。</returns>
+        /// <remarks>
+        /// Reads a float value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值 / Default value returned when the specified setting does not exist</param>
+        /// <returns>读取的浮点数值 / The read float value</returns>
         [UnityEngine.Scripting.Preserve]
         public override float GetFloat(string settingName, float defaultValue)
         {
@@ -336,8 +401,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 向指定游戏配置项写入浮点数值。
         /// </summary>
-        /// <param name="settingName">要写入游戏配置项的名称。</param>
-        /// <param name="value">要写入的浮点数值。</param>
+        /// <remarks>
+        /// Writes a float value to the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要写入游戏配置项的名称 / Name of the game setting to write</param>
+        /// <param name="value">要写入的浮点数值 / Float value to write</param>
         [UnityEngine.Scripting.Preserve]
         public override void SetFloat(string settingName, float value)
         {
@@ -355,8 +423,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取字符串值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <returns>读取的字符串值。</returns>
+        /// <remarks>
+        /// Reads a string value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <returns>读取的字符串值 / The read string value</returns>
         [UnityEngine.Scripting.Preserve]
         public override string GetString(string settingName)
         {
@@ -374,9 +445,12 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取字符串值。
         /// </summary>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值。</param>
-        /// <returns>读取的字符串值。</returns>
+        /// <remarks>
+        /// Reads a string value from the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <param name="defaultValue">当指定的游戏配置项不存在时，返回此默认值 / Default value returned when the specified setting does not exist</param>
+        /// <returns>读取的字符串值 / The read string value</returns>
         [UnityEngine.Scripting.Preserve]
         public override string GetString(string settingName, string defaultValue)
         {
@@ -394,8 +468,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 向指定游戏配置项写入字符串值。
         /// </summary>
-        /// <param name="settingName">要写入游戏配置项的名称。</param>
-        /// <param name="value">要写入的字符串值。</param>
+        /// <remarks>
+        /// Writes a string value to the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要写入游戏配置项的名称 / Name of the game setting to write</param>
+        /// <param name="value">要写入的字符串值 / String value to write</param>
         [UnityEngine.Scripting.Preserve]
         public override void SetString(string settingName, string value)
         {
@@ -413,9 +490,12 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取对象。
         /// </summary>
-        /// <typeparam name="T">要读取对象的类型。</typeparam>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <returns>读取的对象。</returns>
+        /// <remarks>
+        /// Reads an object from the specified game setting.
+        /// </remarks>
+        /// <typeparam name="T">要读取对象的类型 / Type of the object to read</typeparam>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <returns>读取的对象 / The read object</returns>
         [UnityEngine.Scripting.Preserve]
         public override T GetObject<T>(string settingName)
         {
@@ -425,9 +505,12 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取对象。
         /// </summary>
-        /// <param name="objectType">要读取对象的类型。</param>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <returns>读取的对象。</returns>
+        /// <remarks>
+        /// Reads an object from the specified game setting.
+        /// </remarks>
+        /// <param name="objectType">要读取对象的类型 / Type of the object to read</param>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <returns>读取的对象 / The read object</returns>
         [UnityEngine.Scripting.Preserve]
         public override object GetObject(Type objectType, string settingName)
         {
@@ -437,10 +520,13 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取对象。
         /// </summary>
-        /// <typeparam name="T">要读取对象的类型。</typeparam>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <param name="defaultObj">当指定的游戏配置项不存在时，返回此默认对象。</param>
-        /// <returns>读取的对象。</returns>
+        /// <remarks>
+        /// Reads an object from the specified game setting.
+        /// </remarks>
+        /// <typeparam name="T">要读取对象的类型 / Type of the object to read</typeparam>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <param name="defaultObj">当指定的游戏配置项不存在时，返回此默认对象 / Default object returned when the specified setting does not exist</param>
+        /// <returns>读取的对象 / The read object</returns>
         [UnityEngine.Scripting.Preserve]
         public override T GetObject<T>(string settingName, T defaultObj)
         {
@@ -456,10 +542,13 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 从指定游戏配置项中读取对象。
         /// </summary>
-        /// <param name="objectType">要读取对象的类型。</param>
-        /// <param name="settingName">要获取游戏配置项的名称。</param>
-        /// <param name="defaultObj">当指定的游戏配置项不存在时，返回此默认对象。</param>
-        /// <returns>读取的对象。</returns>
+        /// <remarks>
+        /// Reads an object from the specified game setting.
+        /// </remarks>
+        /// <param name="objectType">要读取对象的类型 / Type of the object to read</param>
+        /// <param name="settingName">要获取游戏配置项的名称 / Name of the game setting to read</param>
+        /// <param name="defaultObj">当指定的游戏配置项不存在时，返回此默认对象 / Default object returned when the specified setting does not exist</param>
+        /// <returns>读取的对象 / The read object</returns>
         [UnityEngine.Scripting.Preserve]
         public override object GetObject(Type objectType, string settingName, object defaultObj)
         {
@@ -475,9 +564,12 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 向指定游戏配置项写入对象。
         /// </summary>
-        /// <typeparam name="T">要写入对象的类型。</typeparam>
-        /// <param name="settingName">要写入游戏配置项的名称。</param>
-        /// <param name="obj">要写入的对象。</param>
+        /// <remarks>
+        /// Writes an object to the specified game setting.
+        /// </remarks>
+        /// <typeparam name="T">要写入对象的类型 / Type of the object to write</typeparam>
+        /// <param name="settingName">要写入游戏配置项的名称 / Name of the game setting to write</param>
+        /// <param name="obj">要写入的对象 / Object to write</param>
         [UnityEngine.Scripting.Preserve]
         public override void SetObject<T>(string settingName, T obj)
         {
@@ -495,8 +587,11 @@ namespace GameFrameX.Setting.Runtime
         /// <summary>
         /// 向指定游戏配置项写入对象。
         /// </summary>
-        /// <param name="settingName">要写入游戏配置项的名称。</param>
-        /// <param name="obj">要写入的对象。</param>
+        /// <remarks>
+        /// Writes an object to the specified game setting.
+        /// </remarks>
+        /// <param name="settingName">要写入游戏配置项的名称 / Name of the game setting to write</param>
+        /// <param name="obj">要写入的对象 / Object to write</param>
         [UnityEngine.Scripting.Preserve]
         public override void SetObject(string settingName, object obj)
         {
