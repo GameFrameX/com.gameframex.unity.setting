@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.4.0...1.5.0) (2026-05-14)
+
+
+### Features
+
+* **setting:** 为 PlayerPrefsSettingHelper 添加支付宝小程序存储支持 ([85c6851](https://github.com/gameframex/com.gameframex.unity.setting/commit/85c68511861e951f5d4d8bbe1fa5af5e8f1be29d))
+
 # [1.4.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.3.0...1.4.0) (2026-04-12)
 
 
