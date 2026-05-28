@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.5.0...1.5.1) (2026-05-28)
+
+
+### Bug Fixes
+
+* **ci:** 统一 .github 工作流配置 ([31f8c8b](https://github.com/gameframex/com.gameframex.unity.setting/commit/31f8c8bfda2a4fca2df26861c148bdb05f757b49))
+
 # [1.5.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.4.0...1.5.0) (2026-05-14)
 
 
