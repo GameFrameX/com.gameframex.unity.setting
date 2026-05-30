@@ -1,3 +1,11 @@
+## [1.5.2](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.5.1...1.5.2) (2026-05-30)
+
+
+### Bug Fixes
+
+* **setting:** 修复 DefaultSetting 数值解析与流管理 ([d440052](https://github.com/gameframex/com.gameframex.unity.setting/commit/d4400524e4ba148d185fe61861834390a0ddd7a4))
+* **setting:** 补充公开属性的 [Preserve] 防裁剪标签 ([4b91010](https://github.com/gameframex/com.gameframex.unity.setting/commit/4b91010fcb396d8ac621ff7e58ca6935e8094e94))
+
 ## [1.5.1](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.5.0...1.5.1) (2026-05-28)
 
 

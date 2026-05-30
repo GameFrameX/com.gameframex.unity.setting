@@ -3,7 +3,7 @@
   "displayName": "Game Frame X Setting",
   "category": "GameFrameX",
   "description": "GameFrameX Setting — Unity persistent game settings package. Provides typed key-value storage (bool, int, float, string, serializable objects) with pluggable storage backends (defaulting to Unity PlayerPrefs), supporting load/save lifecycle, existence checks, and bulk removal. Docs: https://gameframex.doc.alianblank.com\n\nGameFrameX Setting — Unity 持久化游戏设置功能包。提供类型化键值存储（bool、int、float、string、可序列化对象），支持可插拔存储后端（默认使用 Unity PlayerPrefs），提供加载/保存生命周期、存在性检查和批量删除。文档：https://gameframex.doc.alianblank.com",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "unity": "2019.4",
   "keywords": [
     "GameFrameX",
