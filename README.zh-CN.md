@@ -1,17 +1,16 @@
 <div align="center">
 
-<img src="https://download.alianblank.com/gameframex/gameframex_logo_320.png" alt="Game Frame X Logo" width="160" />
+<img src="https://download.alianblank.com/gameframex/gameframex_logo_320.png" alt="GameFrameX Logo" width="160" />
 
-# Game Frame X Setting
+# GameFrameX Setting
 
 [![License](https://img.shields.io/github/license/GameFrameX/com.gameframex.unity.setting)](https://github.com/GameFrameX/com.gameframex.unity.setting/blob/main/LICENSE.md)
 [![Version](https://img.shields.io/github/v/release/GameFrameX/com.gameframex.unity.setting)](https://github.com/GameFrameX/com.gameframex.unity.setting/releases)
 [![Documentation](https://img.shields.io/badge/Documentation-docs-blue)](https://gameframex.doc.alianblank.com)
 
-> 独立游戏前后端一体化解决方案 · 独立游戏开发者的圆梦大使
+Unity 游戏设置持久化功能包 — 类型化键值存储，支持可插拔存储后端。
 
 [文档](https://gameframex.doc.alianblank.com) · [快速开始](#快速开始) · [QQ群](https://qm.qq.com/q/5U9Fvebw) · [语言](#语言)
-
 
 </div>
 
@@ -23,83 +22,136 @@
 
 ---
 
-## 项目简介
+## 功能特性
 
-GameFrameX 的 Setting 配置信息组件。
+- 类型化键值存储：`bool`、`int`、`float`、`string`、可序列化对象（JSON）
+- 两种内置存储后端：
+  - **PlayerPrefsSettingHelper**（默认）— 使用 Unity PlayerPrefs，适配抖音、微信、快手、支付宝小游戏平台
+  - **DefaultSettingHelper** — 基于 `Application.persistentDataPath` 的文件二进制存储
+- 可插拔 Helper 架构 — 实现 `ISettingHelper` 接口即可自定义后端
+- 启动时自动加载，关闭时自动保存
+- 安全解析（`TryParse`）— 数据损坏时返回默认值并记录警告，不会崩溃
 
-**Setting 配置信息组件 (Setting Component)** - 负责管理游戏的配置信息，允许您保存和获取各种类型的配置数据。
+## 架构概览
+
+```
+SettingComponent (MonoBehaviour)
+  └─ SettingManager (ISettingManager)
+       └─ ISettingHelper
+            ├─ PlayerPrefsSettingHelper (默认)
+            └─ DefaultSettingHelper
+```
 
 ## 快速开始
 
-### 使用方式（任选其一）
+### 安装
 
-1. 直接在 `manifest.json` 的文件中的 `dependencies` 节点下添加以下内容
-   ```json
-   {"com.gameframex.unity.setting": "https://github.com/AlianBlank/com.gameframex.unity.setting.git"}
-   ```
+编辑 Unity 项目的 `Packages/manifest.json`，添加 `scopedRegistries` 部分：
 
-2. 在 Unity 的 `Packages Manager` 中使用 `Git URL` 的方式添加库，地址为：https://github.com/AlianBlank/com.gameframex.unity.setting.git
-
-3. 直接下载仓库放置到 Unity 项目的 `Packages` 目录下。会自动加载识别。
-
-## 使用示例
-
-### 保存和加载设置
-
-```csharp
-// 获取 SettingComponent 实例
-SettingComponent settingComponent = ...;
-
-// 修改设置
-settingComponent.SetBool("IsFullScreen", true);
-settingComponent.SetInt("ResolutionWidth", 1920);
-settingComponent.SetFloat("Volume", 0.8f);
-settingComponent.SetString("PlayerName", "PlayerOne");
-
-// 保存修改后的设置
-settingComponent.Save();
+```json
+{
+  "scopedRegistries": [
+    {
+      "name": "GameFrameX",
+      "url": "https://gameframex.upm.alianblank.uk",
+      "scopes": [
+        "com.gameframex"
+      ]
+    }
+  ]
+}
 ```
 
-### 查询和获取设置值
+然后在 `dependencies` 中添加对应包：
+
+```json
+{
+  "dependencies": {
+    "com.gameframex.unity": "1.1.1",
+    "com.gameframex.unity.setting": "1.5.1"
+  }
+}
+```
+
+`scopes` 控制哪些包通过此注册表解析。只有以 `com.gameframex` 开头的包才会从这个注册表获取。
+
+### 基本使用
 
 ```csharp
-// 检查是否存在某个设置
-bool hasVolumeSetting = settingComponent.HasSetting("Volume");
+// SettingComponent 添加到 GameObject 后自动可用。
+// 通过 GameFramework 入口或 GetComponent 获取。
 
-// 获取设置项的值（如果不存在则返回默认值 0.5f）
-float volume = settingComponent.GetFloat("Volume", 0.5f);
+SettingComponent setting = ...;
+
+// 写入设置
+setting.SetBool("FullScreen", true);
+setting.SetInt("ResolutionWidth", 1920);
+setting.SetFloat("Volume", 0.8f);
+setting.SetString("PlayerName", "PlayerOne");
+
+// 持久化到存储
+setting.Save();
+```
+
+### 读取设置
+
+```csharp
+// 带默认值回退（键不存在或值损坏时返回默认值）
+float volume = setting.GetFloat("Volume", 0.5f);
+
+// 检查是否存在
+if (setting.HasSetting("PlayerName"))
+{
+    string name = setting.GetString("PlayerName");
+}
 ```
 
 ### 删除设置
 
 ```csharp
-// 移除某个设置
-settingComponent.RemoveSetting("PlayerName");
-
-// 移除所有设置
-settingComponent.RemoveAllSettings();
+setting.RemoveSetting("PlayerName");
+setting.RemoveAllSettings();
 ```
+
+### 切换存储后端
+
+在 `SettingComponent` 的 Inspector 面板中，修改 **Setting Helper Type Name**：
+
+- `GameFrameX.Setting.Runtime.PlayerPrefsSettingHelper`（默认）
+- `GameFrameX.Setting.Runtime.DefaultSettingHelper`（文件存储）
+
+也可以通过 **Custom Setting Helper** 字段指定自定义的 `ISettingHelper` 实现。
+
+## 平台支持
+
+| 后端 | 标准 Unity | 抖音 | 微信 | 快手 | 支付宝 |
+|------|:-:|:-:|:-:|:-:|:-:|
+| PlayerPrefsSettingHelper | PlayerPrefs | TTStorage | WX SDK | KS SDK | Alipay SDK |
+| DefaultSettingHelper | 文件 I/O | 文件 I/O | 文件 I/O | 文件 I/O | 文件 I/O |
 
 ## API 参考
 
 ### 属性
 
-- **Count** - 获取游戏配置项的数量。
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `Count` | `int` | 已存储的设置数量（PlayerPrefs 后端返回 -1） |
 
 ### 方法
 
-| 方法 | 说明 |
-|------|------|
-| `Save()` | 保存当前所有游戏配置项。 |
-| `GetAllSettingNames()` | 获取所有游戏配置项的名称。 |
-| `HasSetting(string)` | 检查是否存在指定名称的配置项。 |
-| `RemoveSetting(string)` | 移除指定的配置项。 |
-| `RemoveAllSettings()` | 清空所有配置项。 |
-| `GetBool/SetBool` | 获取/设置布尔类型配置。 |
-| `GetInt/SetInt` | 获取/设置整数类型配置。 |
-| `GetFloat/SetFloat` | 获取/设置浮点数类型配置。 |
-| `GetString/SetString` | 获取/设置字符串类型配置。 |
-| `GetObject/SetObject` | 获取/设置对象类型配置。 |
+| 方法 | 返回值 | 说明 |
+|------|--------|------|
+| `Load()` | `bool` | 从存储加载设置 |
+| `Save()` | `bool` | 保存设置到存储 |
+| `HasSetting(name)` | `bool` | 检查设置是否存在 |
+| `RemoveSetting(name)` | `bool` | 移除单个设置 |
+| `RemoveAllSettings()` | `void` | 清空所有设置 |
+| `GetAllSettingNames()` | `string[]` | 获取所有设置的键名 |
+| `GetBool` / `SetBool` | `bool` | 布尔类型存取 |
+| `GetInt` / `SetInt` | `int` | 整数类型存取 |
+| `GetFloat` / `SetFloat` | `float` | 浮点数类型存取（不变区域性） |
+| `GetString` / `SetString` | `string` | 字符串类型存取 |
+| `GetObject<T>` / `SetObject<T>` | `T` | JSON 序列化对象存取 |
 
 ## 更新日志
 
@@ -107,4 +159,4 @@ settingComponent.RemoveAllSettings();
 
 ## 开源协议
 
-本项目基于 MIT 协议开源，详见 [LICENSE.md](LICENSE.md) 文件。
+双重许可：[MIT](LICENSE.md) 和 [Apache-2.0](LICENSE.md)。

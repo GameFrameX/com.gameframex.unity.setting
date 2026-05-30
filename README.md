@@ -1,17 +1,16 @@
 <div align="center">
 
-<img src="https://download.alianblank.com/gameframex/gameframex_logo_320.png" alt="Game Frame X Logo" width="160" />
+<img src="https://download.alianblank.com/gameframex/gameframex_logo_320.png" alt="GameFrameX Logo" width="160" />
 
-# Game Frame X Setting
+# GameFrameX Setting
 
 [![License](https://img.shields.io/github/license/GameFrameX/com.gameframex.unity.setting)](https://github.com/GameFrameX/com.gameframex.unity.setting/blob/main/LICENSE.md)
 [![Version](https://img.shields.io/github/v/release/GameFrameX/com.gameframex.unity.setting)](https://github.com/GameFrameX/com.gameframex.unity.setting/releases)
 [![Documentation](https://img.shields.io/badge/Documentation-docs-blue)](https://gameframex.doc.alianblank.com)
 
-> All-in-One Solution for Indie Game Development · Empowering Indie Developers' Dreams
+Game settings persistence package for Unity — typed key-value storage with pluggable backends.
 
 [Documentation](https://gameframex.doc.alianblank.com) · [Quick Start](#quick-start) · [QQ Group](https://qm.qq.com/q/5U9Fvebw) · [Language](#language)
-
 
 </div>
 
@@ -23,88 +22,141 @@
 
 ---
 
-## Project Overview
+## Features
 
-GameFrameX Setting Configuration Component.
+- Typed key-value storage: `bool`, `int`, `float`, `string`, serializable objects (via JSON)
+- Two built-in storage backends:
+  - **PlayerPrefsSettingHelper** (default) — uses Unity PlayerPrefs, with platform adapters for Douyin, WeChat, Kuaishou, and Alipay mini-games
+  - **DefaultSettingHelper** — file-based binary storage at `Application.persistentDataPath`
+- Pluggable helper architecture — implement `ISettingHelper` for custom backends
+- Auto-load on start, auto-save on shutdown
+- Safe parsing with `TryParse` — corrupted values return defaults with a warning log instead of crashing
 
-**Setting Configuration Component (Setting Component)** - Manages game configuration information, allowing you to save and retrieve various types of configuration data.
+## Architecture
+
+```
+SettingComponent (MonoBehaviour)
+  └─ SettingManager (ISettingManager)
+       └─ ISettingHelper
+            ├─ PlayerPrefsSettingHelper (default)
+            └─ DefaultSettingHelper
+```
 
 ## Quick Start
 
-### Installation (choose one)
+### Installation
 
-1. Add the following to the `dependencies` section of `manifest.json`:
-   ```json
-   {"com.gameframex.unity.setting": "https://github.com/AlianBlank/com.gameframex.unity.setting.git"}
-   ```
+Edit your Unity project's `Packages/manifest.json` and add the `scopedRegistries` section:
 
-2. Add via Unity's `Package Manager` using `Git URL`: https://github.com/AlianBlank/com.gameframex.unity.setting.git
-
-3. Download the repository directly and place it in the Unity project's `Packages` directory. It will be auto-loaded.
-
-## Usage Examples
-
-### Save and Load Settings
-
-```csharp
-// Get SettingComponent instance
-SettingComponent settingComponent = ...;
-
-// Modify settings
-settingComponent.SetBool("IsFullScreen", true);
-settingComponent.SetInt("ResolutionWidth", 1920);
-settingComponent.SetFloat("Volume", 0.8f);
-settingComponent.SetString("PlayerName", "PlayerOne");
-
-// Save settings
-settingComponent.Save();
+```json
+{
+  "scopedRegistries": [
+    {
+      "name": "GameFrameX",
+      "url": "https://gameframex.upm.alianblank.uk",
+      "scopes": [
+        "com.gameframex"
+      ]
+    }
+  ]
+}
 ```
 
-### Query and Get Settings
+Then add the package to `dependencies`:
+
+```json
+{
+  "dependencies": {
+    "com.gameframex.unity": "1.1.1",
+    "com.gameframex.unity.setting": "1.5.1"
+  }
+}
+```
+
+`scopes` controls which packages are resolved through this registry. Only packages whose names start with `com.gameframex` will be fetched from it.
+
+### Basic Usage
 
 ```csharp
-// Check if a setting exists
-bool hasVolumeSetting = settingComponent.HasSetting("Volume");
+// The SettingComponent is automatically available after adding to a GameObject.
+// Access it via GameFramework entry or GetComponent.
 
-// Get setting value with default
-float volume = settingComponent.GetFloat("Volume", 0.5f); // Returns 0.5f if not found
+SettingComponent setting = ...;
+
+// Write settings
+setting.SetBool("FullScreen", true);
+setting.SetInt("ResolutionWidth", 1920);
+setting.SetFloat("Volume", 0.8f);
+setting.SetString("PlayerName", "PlayerOne");
+
+// Persist to storage
+setting.Save();
+```
+
+### Read Settings
+
+```csharp
+// With default fallback (returns default if key is missing or value is corrupted)
+float volume = setting.GetFloat("Volume", 0.5f);
+
+// Check existence
+if (setting.HasSetting("PlayerName"))
+{
+    string name = setting.GetString("PlayerName");
+}
 ```
 
 ### Remove Settings
 
 ```csharp
-// Remove a specific setting
-settingComponent.RemoveSetting("PlayerName");
-
-// Remove all settings
-settingComponent.RemoveAllSettings();
+setting.RemoveSetting("PlayerName");
+setting.RemoveAllSettings();
 ```
+
+### Switch Storage Backend
+
+In the Inspector for `SettingComponent`, change **Setting Helper Type Name** to:
+
+- `GameFrameX.Setting.Runtime.PlayerPrefsSettingHelper` (default)
+- `GameFrameX.Setting.Runtime.DefaultSettingHelper` (file-based)
+
+Or assign a custom `ISettingHelper` via the **Custom Setting Helper** field.
+
+## Supported Platforms
+
+| Backend | Standard Unity | Douyin | WeChat | Kuaishou | Alipay |
+|---------|:-:|:-:|:-:|:-:|:-:|
+| PlayerPrefsSettingHelper | PlayerPrefs | TTStorage | WX SDK | KS SDK | Alipay SDK |
+| DefaultSettingHelper | File I/O | File I/O | File I/O | File I/O | File I/O |
 
 ## API Reference
 
 ### Properties
 
-- **Count** - Gets the number of game configuration items.
+| Property | Type | Description |
+|----------|------|-------------|
+| `Count` | `int` | Number of stored settings (-1 for PlayerPrefs backend) |
 
 ### Methods
 
-| Method | Description |
-|--------|-------------|
-| `Save()` | Saves all current game configuration items. |
-| `GetAllSettingNames()` | Gets all game configuration item names. |
-| `HasSetting(string)` | Checks if a configuration item exists. |
-| `RemoveSetting(string)` | Removes a specific configuration item. |
-| `RemoveAllSettings()` | Removes all configuration items. |
-| `GetBool/SetBool` | Get/Set boolean configuration. |
-| `GetInt/SetInt` | Get/Set integer configuration. |
-| `GetFloat/SetFloat` | Get/Set float configuration. |
-| `GetString/SetString` | Get/Set string configuration. |
-| `GetObject/SetObject` | Get/Set object configuration. |
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `Load()` | `bool` | Load settings from storage |
+| `Save()` | `bool` | Save settings to storage |
+| `HasSetting(name)` | `bool` | Check if a setting exists |
+| `RemoveSetting(name)` | `bool` | Remove a single setting |
+| `RemoveAllSettings()` | `void` | Clear all settings |
+| `GetAllSettingNames()` | `string[]` | Get all setting key names |
+| `GetBool` / `SetBool` | `bool` | Boolean accessors |
+| `GetInt` / `SetInt` | `int` | Integer accessors |
+| `GetFloat` / `SetFloat` | `float` | Float accessors (invariant culture) |
+| `GetString` / `SetString` | `string` | String accessors |
+| `GetObject<T>` / `SetObject<T>` | `T` | JSON-serialized object accessors |
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for details.
+See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+Dual-licensed under [MIT](LICENSE.md) and [Apache-2.0](LICENSE.md).

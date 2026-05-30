@@ -1,17 +1,16 @@
 <div align="center">
 
-<img src="https://download.alianblank.com/gameframex/gameframex_logo_320.png" alt="Game Frame X Logo" width="160" />
+<img src="https://download.alianblank.com/gameframex/gameframex_logo_320.png" alt="GameFrameX Logo" width="160" />
 
-# Game Frame X Setting
+# GameFrameX Setting
 
 [![License](https://img.shields.io/github/license/GameFrameX/com.gameframex.unity.setting)](https://github.com/GameFrameX/com.gameframex.unity.setting/blob/main/LICENSE.md)
 [![Version](https://img.shields.io/github/v/release/GameFrameX/com.gameframex.unity.setting)](https://github.com/GameFrameX/com.gameframex.unity.setting/releases)
 [![Documentation](https://img.shields.io/badge/Documentation-docs-blue)](https://gameframex.doc.alianblank.com)
 
-> インディゲーム開発者向けオールインワンソリューション · インディ開発者の夢を支援
+Unity 向けゲーム設定永続化パッケージ — 型付きキーバリューストレージとプラグイン可能なバックエンド。
 
 [ドキュメント](https://gameframex.doc.alianblank.com) · [クイックスタート](#クイックスタート) · [QQグループ](https://qm.qq.com/q/5U9Fvebw) · [言語](#言語)
-
 
 </div>
 
@@ -23,83 +22,136 @@
 
 ---
 
-## プロジェクト概要
+## 機能
 
-GameFrameX の Setting 設定情報コンポーネント。
+- 型付きキーバリューストレージ：`bool`、`int`、`float`、`string`、シリアライズ可能オブジェクト（JSON）
+- 2つの内蔵ストレージバックエンド：
+  - **PlayerPrefsSettingHelper**（デフォルト）— Unity PlayerPrefs を使用。Douyin、WeChat、Kuaishou、Alipay ミニゲーム向けプラットフォームアダプター搭載
+  - **DefaultSettingHelper** — `Application.persistentDataPath` によるファイルベースのバイナリストレージ
+- プラグイン可能な Helper アーキテクチャ — `ISettingHelper` を実装してカスタムバックエンドを作成可能
+- 起動時に自動ロード、終了時に自動セーブ
+- 安全なパース（`TryParse`）— 破損した値はデフォルトを返し警告ログを出力、クラッシュなし
 
-**Setting 設定情報コンポーネント (Setting Component)** - ゲームの設定情報を管理し、さまざまなタイプの設定データの保存と取得を可能にします。
+## アーキテクチャ
+
+```
+SettingComponent (MonoBehaviour)
+  └─ SettingManager (ISettingManager)
+       └─ ISettingHelper
+            ├─ PlayerPrefsSettingHelper (デフォルト)
+            └─ DefaultSettingHelper
+```
 
 ## クイックスタート
 
-### インストール（いずれかを選択）
+### インストール
 
-1. `manifest.json` の `dependencies` セクションに以下を追加します：
-   ```json
-   {"com.gameframex.unity.setting": "https://github.com/AlianBlank/com.gameframex.unity.setting.git"}
-   ```
+Unity プロジェクトの `Packages/manifest.json` を編集し、`scopedRegistries` セクションを追加してください：
 
-2. Unity の `Package Manager` で `Git URL` を使用して追加：https://github.com/AlianBlank/com.gameframex.unity.setting.git
-
-3. リポジトリを直接ダウンロードして、Unity プロジェクトの `Packages` ディレクトリに配置します。自動的に読み込まれます。
-
-## 使用例
-
-### 設定の保存と読み込み
-
-```csharp
-// SettingComponent インスタンスを取得
-SettingComponent settingComponent = ...;
-
-// 設定を変更
-settingComponent.SetBool("IsFullScreen", true);
-settingComponent.SetInt("ResolutionWidth", 1920);
-settingComponent.SetFloat("Volume", 0.8f);
-settingComponent.SetString("PlayerName", "PlayerOne");
-
-// 設定を保存
-settingComponent.Save();
+```json
+{
+  "scopedRegistries": [
+    {
+      "name": "GameFrameX",
+      "url": "https://gameframex.upm.alianblank.uk",
+      "scopes": [
+        "com.gameframex"
+      ]
+    }
+  ]
+}
 ```
 
-### 設定の確認と取得
+次に `dependencies` にパッケージを追加します：
+
+```json
+{
+  "dependencies": {
+    "com.gameframex.unity": "1.1.1",
+    "com.gameframex.unity.setting": "1.5.1"
+  }
+}
+```
+
+`scopes` は、どのパッケージをこのレジストリから解決するかを制御します。`com.gameframex` で始まるパッケージのみがこのレジストリから取得されます。
+
+### 基本的な使い方
 
 ```csharp
-// 設定が存在するか確認
-bool hasVolumeSetting = settingComponent.HasSetting("Volume");
+// SettingComponent は GameObject に追加後、自動的に利用可能です。
+// GameFramework エントリまたは GetComponent で取得します。
 
-// デフォルト値付きで設定値を取得
-float volume = settingComponent.GetFloat("Volume", 0.5f); // 見つからない場合は 0.5f を返す
+SettingComponent setting = ...;
+
+// 設定の書き込み
+setting.SetBool("FullScreen", true);
+setting.SetInt("ResolutionWidth", 1920);
+setting.SetFloat("Volume", 0.8f);
+setting.SetString("PlayerName", "PlayerOne");
+
+// ストレージに保存
+setting.Save();
+```
+
+### 設定の読み取り
+
+```csharp
+// デフォルトフォールバック付き（キーが存在しない、または値が破損している場合はデフォルトを返す）
+float volume = setting.GetFloat("Volume", 0.5f);
+
+// 存在確認
+if (setting.HasSetting("PlayerName"))
+{
+    string name = setting.GetString("PlayerName");
+}
 ```
 
 ### 設定の削除
 
 ```csharp
-// 特定の設定を削除
-settingComponent.RemoveSetting("PlayerName");
-
-// すべての設定を削除
-settingComponent.RemoveAllSettings();
+setting.RemoveSetting("PlayerName");
+setting.RemoveAllSettings();
 ```
+
+### ストレージバックエンドの切り替え
+
+`SettingComponent` の Inspector で **Setting Helper Type Name** を変更：
+
+- `GameFrameX.Setting.Runtime.PlayerPrefsSettingHelper`（デフォルト）
+- `GameFrameX.Setting.Runtime.DefaultSettingHelper`（ファイルベース）
+
+または **Custom Setting Helper** フィールドでカスタム `ISettingHelper` 実装を指定します。
+
+## プラットフォーム対応
+
+| バックエンド | 標準 Unity | Douyin | WeChat | Kuaishou | Alipay |
+|-------------|:-:|:-:|:-:|:-:|:-:|
+| PlayerPrefsSettingHelper | PlayerPrefs | TTStorage | WX SDK | KS SDK | Alipay SDK |
+| DefaultSettingHelper | ファイル I/O | ファイル I/O | ファイル I/O | ファイル I/O | ファイル I/O |
 
 ## API リファレンス
 
 ### プロパティ
 
-- **Count** - ゲーム設定項目の数を取得します。
+| プロパティ | 型 | 説明 |
+|-----------|------|------|
+| `Count` | `int` | 保存されている設定の数（PlayerPrefs バックエンドでは -1） |
 
 ### メソッド
 
-| メソッド | 説明 |
-|--------|------|
-| `Save()` | 現在のすべてのゲーム設定項目を保存します。 |
-| `GetAllSettingNames()` | すべてのゲーム設定項目名を取得します。 |
-| `HasSetting(string)` | 指定した名前の設定項目が存在するか確認します。 |
-| `RemoveSetting(string)` | 指定した設定項目を削除します。 |
-| `RemoveAllSettings()` | すべての設定項目を削除します。 |
-| `GetBool/SetBool` | bool型設定の取得/設定。 |
-| `GetInt/SetInt` | int型設定の取得/設定。 |
-| `GetFloat/SetFloat` | float型設定の取得/設定。 |
-| `GetString/SetString` | string型設定の取得/設定。 |
-| `GetObject/SetObject` | object型設定の取得/設定。 |
+| メソッド | 戻り値 | 説明 |
+|---------|---------|------|
+| `Load()` | `bool` | ストレージから設定を読み込む |
+| `Save()` | `bool` | 設定をストレージに保存する |
+| `HasSetting(name)` | `bool` | 設定が存在するか確認する |
+| `RemoveSetting(name)` | `bool` | 単一の設定を削除する |
+| `RemoveAllSettings()` | `void` | すべての設定をクリアする |
+| `GetAllSettingNames()` | `string[]` | すべての設定キー名を取得する |
+| `GetBool` / `SetBool` | `bool` | ブール型アクセサ |
+| `GetInt` / `SetInt` | `int` | 整数型アクセサ |
+| `GetFloat` / `SetFloat` | `float` | 浮動小数点型アクセサ（インバリアントカルチャ） |
+| `GetString` / `SetString` | `string` | 文字列型アクセサ |
+| `GetObject<T>` / `SetObject<T>` | `T` | JSON シリアライズオブジェクトアクセサ |
 
 ## 変更履歴
 
@@ -107,4 +159,4 @@ settingComponent.RemoveAllSettings();
 
 ## ライセンス
 
-このプロジェクトは MIT ライセンスの下で公開されています。詳細は [LICENSE.md](LICENSE.md) ファイルをご覧ください。
+デュアルライセンス：[MIT](LICENSE.md) および [Apache-2.0](LICENSE.md)。
