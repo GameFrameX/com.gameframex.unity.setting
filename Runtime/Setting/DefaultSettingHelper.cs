@@ -58,6 +58,7 @@ namespace GameFrameX.Setting.Runtime
         /// Gets the number of game settings.
         /// </remarks>
         /// <value>游戏配置项数量 / Number of game settings</value>
+        [UnityEngine.Scripting.Preserve]
         public override int Count
         {
             get
@@ -73,6 +74,7 @@ namespace GameFrameX.Setting.Runtime
         /// Gets the file path where game settings are stored.
         /// </remarks>
         /// <value>游戏配置存储文件路径 / File path where game settings are stored</value>
+        [UnityEngine.Scripting.Preserve]
         public string FilePath
         {
             get
@@ -88,6 +90,7 @@ namespace GameFrameX.Setting.Runtime
         /// Gets the game settings instance.
         /// </remarks>
         /// <value>游戏配置实例 / Game settings instance</value>
+        [UnityEngine.Scripting.Preserve]
         public DefaultSetting Setting
         {
             get
@@ -103,6 +106,7 @@ namespace GameFrameX.Setting.Runtime
         /// Gets the game setting serializer.
         /// </remarks>
         /// <value>游戏配置序列化器 / Game setting serializer</value>
+        [UnityEngine.Scripting.Preserve]
         public DefaultSettingSerializer Serializer
         {
             get

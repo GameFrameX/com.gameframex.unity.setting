@@ -80,6 +80,7 @@ namespace GameFrameX.Setting.Runtime
         /// </remarks>
         /// <value>游戏配置项数量 / Number of game settings</value>
         /// <exception cref="GameFrameworkException">当游戏配置辅助器未设置时抛出 / Thrown when the setting helper is not set</exception>
+        [UnityEngine.Scripting.Preserve]
         public int Count
         {
             get

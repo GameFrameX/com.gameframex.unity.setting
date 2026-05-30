@@ -49,6 +49,7 @@ namespace GameFrameX.Setting.Runtime
         /// Gets the number of game settings. PlayerPrefs does not support counting settings, always returns -1.
         /// </remarks>
         /// <value>始终返回 -1 / Always returns -1</value>
+        [UnityEngine.Scripting.Preserve]
         public override int Count
         {
             get { return -1; }

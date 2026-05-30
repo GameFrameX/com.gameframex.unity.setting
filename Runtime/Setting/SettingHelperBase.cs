@@ -49,6 +49,7 @@ namespace GameFrameX.Setting.Runtime
         /// Gets the number of game settings.
         /// </remarks>
         /// <value>游戏配置项数量 / Number of game settings</value>
+        [UnityEngine.Scripting.Preserve]
         public abstract int Count { get; }
 
         /// <summary>
