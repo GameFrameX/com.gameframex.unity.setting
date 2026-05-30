@@ -55,7 +55,13 @@ namespace GameFrameX.Setting.Runtime
         /// Gets the number of game settings.
         /// </remarks>
         /// <value>游戏配置项数量 / Number of game settings</value>
-        public int Count => m_Settings.Count;
+        public int Count
+        {
+            get
+            {
+                return m_Settings.Count;
+            }
+        }
 
         /// <summary>
         /// 获取所有游戏配置项的名称。
@@ -157,7 +163,13 @@ namespace GameFrameX.Setting.Runtime
                 return false;
             }
 
-            return int.Parse(value) != 0;
+            if (!int.TryParse(value, out var intValue))
+            {
+                Log.Warning("Setting '{0}' value '{1}' is not a valid integer.", settingName, value);
+                return false;
+            }
+
+            return intValue != 0;
         }
 
         /// <summary>
@@ -177,7 +189,13 @@ namespace GameFrameX.Setting.Runtime
                 return defaultValue;
             }
 
-            return int.Parse(value) != 0;
+            if (!int.TryParse(value, out var intValue))
+            {
+                Log.Warning("Setting '{0}' value '{1}' is not a valid integer.", settingName, value);
+                return defaultValue;
+            }
+
+            return intValue != 0;
         }
 
         /// <summary>
@@ -211,7 +229,13 @@ namespace GameFrameX.Setting.Runtime
                 return 0;
             }
 
-            return int.Parse(value);
+            if (!int.TryParse(value, out var intValue))
+            {
+                Log.Warning("Setting '{0}' value '{1}' is not a valid integer.", settingName, value);
+                return 0;
+            }
+
+            return intValue;
         }
 
         /// <summary>
@@ -231,7 +255,13 @@ namespace GameFrameX.Setting.Runtime
                 return defaultValue;
             }
 
-            return int.Parse(value);
+            if (!int.TryParse(value, out var intValue))
+            {
+                Log.Warning("Setting '{0}' value '{1}' is not a valid integer.", settingName, value);
+                return defaultValue;
+            }
+
+            return intValue;
         }
 
         /// <summary>
@@ -265,7 +295,13 @@ namespace GameFrameX.Setting.Runtime
                 return 0f;
             }
 
-            return float.Parse(value);
+            if (!float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var floatValue))
+            {
+                Log.Warning("Setting '{0}' value '{1}' is not a valid float.", settingName, value);
+                return 0f;
+            }
+
+            return floatValue;
         }
 
         /// <summary>
@@ -285,7 +321,13 @@ namespace GameFrameX.Setting.Runtime
                 return defaultValue;
             }
 
-            return float.Parse(value);
+            if (!float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var floatValue))
+            {
+                Log.Warning("Setting '{0}' value '{1}' is not a valid float.", settingName, value);
+                return defaultValue;
+            }
+
+            return floatValue;
         }
 
         /// <summary>
@@ -366,14 +408,12 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public void Serialize(Stream stream)
         {
-            using (BinaryWriter binaryWriter = new BinaryWriter(stream, Encoding.UTF8))
+            BinaryWriter binaryWriter = new BinaryWriter(stream, Encoding.UTF8);
+            binaryWriter.Write7BitEncodedInt32(m_Settings.Count);
+            foreach (KeyValuePair<string, string> setting in m_Settings)
             {
-                binaryWriter.Write7BitEncodedInt32(m_Settings.Count);
-                foreach (KeyValuePair<string, string> setting in m_Settings)
-                {
-                    binaryWriter.Write(setting.Key);
-                    binaryWriter.Write(setting.Value);
-                }
+                binaryWriter.Write(setting.Key);
+                binaryWriter.Write(setting.Value);
             }
         }
 
@@ -388,13 +428,11 @@ namespace GameFrameX.Setting.Runtime
         public void Deserialize(Stream stream)
         {
             m_Settings.Clear();
-            using (BinaryReader binaryReader = new BinaryReader(stream, Encoding.UTF8))
+            BinaryReader binaryReader = new BinaryReader(stream, Encoding.UTF8);
+            int settingCount = binaryReader.Read7BitEncodedInt32();
+            for (int i = 0; i < settingCount; i++)
             {
-                int settingCount = binaryReader.Read7BitEncodedInt32();
-                for (int i = 0; i < settingCount; i++)
-                {
-                    m_Settings.Add(binaryReader.ReadString(), binaryReader.ReadString());
-                }
+                m_Settings.Add(binaryReader.ReadString(), binaryReader.ReadString());
             }
         }
     }
