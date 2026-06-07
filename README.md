@@ -51,35 +51,36 @@ SettingComponent (MonoBehaviour)
 
 ### Installation
 
-Edit your Unity project's `Packages/manifest.json` and add the `scopedRegistries` section:
+Choose one of the following methods:
 
-```json
-{
-  "scopedRegistries": [
-    {
-      "name": "GameFrameX",
-      "url": "https://gameframex.upm.alianblank.uk",
-      "scopes": [
-        "com.gameframex"
-      ]
-    }
-  ]
-}
-```
+1. Edit your Unity project's `Packages/manifest.json` and add the `scopedRegistries` section:
+   ```json
+   {
+     "scopedRegistries": [
+       {
+         "name": "GameFrameX",
+         "url": "https://gameframex.upm.alianblank.uk",
+         "scopes": [
+           "com.gameframex"
+         ]
+       }
+     ],
+     "dependencies": {
+       "com.gameframex.unity.setting": "1.5.2"
+     }
+   }
+   ```
 
-Then add the package to `dependencies`:
+   `scopes` controls which packages are resolved through this registry. Only packages whose names start with `com.gameframex` will be fetched from it.
 
-```json
-{
-  "dependencies": {
-    "com.gameframex.unity": "1.1.1",
-    "com.gameframex.unity.setting": "1.5.1"
-  }
-}
-```
-
-`scopes` controls which packages are resolved through this registry. Only packages whose names start with `com.gameframex` will be fetched from it.
-
+2. Add to `manifest.json` dependencies:
+   ```json
+   {
+      "com.gameframex.unity.setting": "https://github.com/gameframex/com.gameframex.unity.setting.git"
+   }
+   ```
+3. Use **Package Manager** in Unity with **Git URL**: `https://github.com/gameframex/com.gameframex.unity.setting.git`
+4. Clone the repository into your Unity project's `Packages` directory. It will be loaded automatically.
 ### Basic Usage
 
 ```csharp
