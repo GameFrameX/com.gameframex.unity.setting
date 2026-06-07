@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.5.2...1.5.3) (2026-06-07)
+
+
+### Bug Fixes
+
+* 补全包规范文件（LICENSE/CHANGELOG/URL 字段/unity 字段） ([ccf1a71](https://github.com/gameframex/com.gameframex.unity.setting/commit/ccf1a71f6350cb0fa84f451d70dc810175f7ab15))
+
 ## [1.5.2](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.5.1...1.5.2) (2026-05-30)
 
 
