@@ -162,6 +162,20 @@ setting.RemoveAllSettings();
 
 详见 [CHANGELOG.md](CHANGELOG.md)。
 
+
+## 依赖
+
+| 包 | 说明 |
+|----|------|
+| `com.gameframex.unity` | 1.1.1 |
+
+## 文档与资源
+
+- [官方文档](https://gameframex.doc.alianblank.com)
+
+## 社区与支持
+
+- QQ群: 467608841 / 233840761
 ## 开源协议
 
 双重许可：[MIT](LICENSE.md) 和 [Apache-2.0](LICENSE.md)。

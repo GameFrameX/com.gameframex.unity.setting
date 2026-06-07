@@ -162,6 +162,20 @@ Or assign a custom `ISettingHelper` via the **Custom Setting Helper** field.
 
 See [CHANGELOG.md](CHANGELOG.md) for release history.
 
+
+## Dependencies
+
+| Package | Description |
+|---------|-------------|
+| `com.gameframex.unity` | 1.1.1 |
+
+## Documentation & Resources
+
+- [Documentation](https://gameframex.doc.alianblank.com)
+
+## Community & Support
+
+- QQ Group: 467608841 / 233840761
 ## License
 
 Dual-licensed under [MIT](LICENSE.md) and [Apache-2.0](LICENSE.md).
