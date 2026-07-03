@@ -135,6 +135,8 @@ Or assign a custom `ISettingHelper` via the **Custom Setting Helper** field.
 | PlayerPrefsSettingHelper | PlayerPrefs | TTStorage | WX SDK | KS SDK | Alipay SDK |
 | DefaultSettingHelper | File I/O | File I/O | File I/O | File I/O | File I/O |
 
+Mini-game storage support is isolated in platform adapter assemblies. The common `GameFrameX.Setting.Runtime` assembly only depends on `GameFrameX.Runtime`; install the matching mini-game SDK and enable its scripting define (`ENABLE_DOUYIN_MINI_GAME`, `ENABLE_WECHAT_MINI_GAME`, `ENABLE_KUAISHOU_MINI_GAME`, or `ENABLE_ALIPAY_MINI_GAME`) to compile the corresponding adapter.
+
 ## API Reference
 
 ### Properties

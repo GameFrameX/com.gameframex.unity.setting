@@ -1,3 +1,9 @@
+## Unreleased
+
+### Code Refactoring
+
+* **setting:** 将 PlayerPrefsSettingHelper 小游戏存储分支抽取为平台 adapter backend，普通 Runtime assembly 不再硬依赖小游戏 SDK
+
 ## [1.5.3](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.5.2...1.5.3) (2026-06-07)
 
 
