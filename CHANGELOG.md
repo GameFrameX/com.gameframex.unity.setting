@@ -1,3 +1,15 @@
+# [1.6.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.5.3...1.6.0) (2026-07-03)
+
+
+### Features
+
+* **setting:** 抽象存储后端并重构 PlayerPrefsSettingHelper ([aadfb68](https://github.com/gameframex/com.gameframex.unity.setting/commit/aadfb68a774e22c3e42724acc4da1c8fa3e8d278)), closes [#if](https://github.com/gameframex/com.gameframex.unity.setting/issues/if)
+* **setting:** 注册运行时自动加载 ([dd2bcb3](https://github.com/gameframex/com.gameframex.unity.setting/commit/dd2bcb310eed0244d9ace7c44525ef336b647f6f))
+* **setting:** 添加微信小游戏设置存储 adapter ([bd4b119](https://github.com/gameframex/com.gameframex.unity.setting/commit/bd4b119791ff4913d0510afe92a497090118d2fb))
+* **setting:** 添加快手小游戏设置存储 adapter ([fca20d9](https://github.com/gameframex/com.gameframex.unity.setting/commit/fca20d974849f01d9c723a5cef299ffb443464f7))
+* **setting:** 添加抖音小游戏设置存储 adapter ([9de8317](https://github.com/gameframex/com.gameframex.unity.setting/commit/9de83176a14658c1ce9a6c47157fda880510ebd8))
+* **setting:** 添加支付宝小游戏设置存储 adapter ([8796ca0](https://github.com/gameframex/com.gameframex.unity.setting/commit/8796ca0fe6be886a60a184619b757ca688f3de8d))
+
 ## Unreleased
 
 ### Code Refactoring
