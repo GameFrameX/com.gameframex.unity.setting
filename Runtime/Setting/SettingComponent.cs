@@ -44,6 +44,7 @@ namespace GameFrameX.Setting.Runtime
     [DisallowMultipleComponent]
     [RequireComponent(typeof(GameFrameXSettingCroppingHelper))]
     [AddComponentMenu("GameFrameX/Setting")]
+    [GameFrameXAutoComponent(-5000)]
     public sealed class SettingComponent : GameFrameworkComponent
     {
         private ISettingManager m_SettingManager = null;
