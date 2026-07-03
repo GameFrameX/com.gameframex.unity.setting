@@ -42,6 +42,26 @@ namespace GameFrameX.Setting.Runtime
     [UnityEngine.Scripting.Preserve]
     public class PlayerPrefsSettingHelper : SettingHelperBase
     {
+        private ISettingStorageBackend m_StorageBackend;
+
+        private ISettingStorageBackend StorageBackend
+        {
+            get
+            {
+                if (m_StorageBackend == null)
+                {
+                    m_StorageBackend = SettingStorageBackendFactory.Create();
+                }
+
+                return m_StorageBackend;
+            }
+        }
+
+        internal void SetStorageBackendForTests(ISettingStorageBackend storageBackend)
+        {
+            m_StorageBackend = storageBackend ?? throw new GameFrameworkException("Storage backend is invalid.");
+        }
+
         /// <summary>
         /// 获取游戏配置项数量。PlayerPrefs 不支持获取配置项数量，始终返回 -1。
         /// </summary>
@@ -72,18 +92,13 @@ namespace GameFrameX.Setting.Runtime
         /// 保存游戏配置。
         /// </summary>
         /// <remarks>
-        /// Saves game settings. On WebGL mini-game platforms (Douyin/WeChat/Kuaiishou), this is a no-op.
+        /// Saves game settings. Mini-game storage adapters may return success without an explicit flush when the platform SDK writes synchronously.
         /// </remarks>
         /// <returns>是否保存游戏配置成功 / Whether the settings were saved successfully</returns>
         [UnityEngine.Scripting.Preserve]
         public override bool Save()
         {
-#if UNITY_WEBGL && (ENABLE_DOUYIN_MINI_GAME || ENABLE_WECHAT_MINI_GAME || ENABLE_KUAISHOU_MINI_GAME || ENABLE_ALIPAY_MINI_GAME)
-            return true;
-#else
-            UnityEngine.PlayerPrefs.Save();
-            return true;
-#endif
+            return StorageBackend.Save();
         }
 
         /// <summary>
@@ -131,21 +146,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override bool HasSetting(string settingName)
         {
-#if UNITY_EDITOR
-            return UnityEngine.PlayerPrefs.HasKey(settingName);
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            return TTSDK.TTStorage.HasKeySync(settingName);
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            return WeChatWASM.WXSDKManagerHandler.Instance.StorageHasKeySync(settingName);
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            return KSWASM.KSBase.StorageHasKeySync(settingName);
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            var value = AlipaySdk.AlipaySDK.API.GetStorageSync(settingName);
-            return !string.IsNullOrWhiteSpace(value);
-#else
-            return UnityEngine.PlayerPrefs.HasKey(settingName);
-#endif
+            return StorageBackend.HasKey(settingName);
         }
 
         /// <summary>
@@ -159,57 +160,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override bool RemoveSetting(string settingName)
         {
-#if UNITY_EDITOR
-            if (!UnityEngine.PlayerPrefs.HasKey(settingName))
-            {
-                return false;
-            }
-
-            UnityEngine.PlayerPrefs.DeleteKey(settingName);
-            return true;
-#endif
-
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            if (!TTSDK.TTStorage.HasKeySync(settingName))
-            {
-                return false;
-            }
-
-            TTSDK.TTStorage.DeleteKeySync(settingName);
-            return true;
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            if (!WeChatWASM.WXSDKManagerHandler.Instance.StorageHasKeySync(settingName))
-            {
-                return false;
-            }
-
-            WeChatWASM.WXSDKManagerHandler.Instance.StorageDeleteKeySync(settingName);
-            return true;
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            if (!KSWASM.KSBase.StorageHasKeySync(settingName))
-            {
-                return false;
-            }
-
-            KSWASM.KSBase.StorageDeleteKeySync(settingName);
-            return true;
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            var value = AlipaySdk.AlipaySDK.API.GetStorageSync(settingName);
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return false;
-            }
-
-            return AlipaySdk.AlipaySDK.API.RemoveStorageSync(settingName);
-#else
-            if (!UnityEngine.PlayerPrefs.HasKey(settingName))
-            {
-                return false;
-            }
-
-            UnityEngine.PlayerPrefs.DeleteKey(settingName);
-            return true;
-#endif
+            return StorageBackend.DeleteKey(settingName);
         }
 
         /// <summary>
@@ -221,21 +172,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void RemoveAllSettings()
         {
-#if UNITY_EDITOR
-            UnityEngine.PlayerPrefs.DeleteAll();
-            return;
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            TTSDK.TTStorage.DeleteAllSync();
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            WeChatWASM.WXSDKManagerHandler.Instance.StorageDeleteAllSync();
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            KSWASM.KSBase.StorageDeleteAllSync();
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            AlipaySdk.AlipaySDK.API.ClearStorageSync();
-#else
-            UnityEngine.PlayerPrefs.DeleteAll();
-#endif
+            StorageBackend.DeleteAll();
         }
 
         /// <summary>
@@ -249,21 +186,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override bool GetBool(string settingName)
         {
-#if UNITY_EDITOR
-            return UnityEngine.PlayerPrefs.GetInt(settingName) != 0;
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            return TTSDK.TTStorage.GetIntSync(settingName, 0) != 0;
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetIntSync(settingName, 0) != 0;
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            return KSWASM.KSBase.StorageGetIntSync(settingName, 0) != 0;
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            var value = AlipaySdk.AlipaySDK.API.GetStorageSync(settingName);
-            return string.IsNullOrWhiteSpace(value) ? false : Convert.ToInt32(value) != 0;
-#else
-            return UnityEngine.PlayerPrefs.GetInt(settingName) != 0;
-#endif
+            return StorageBackend.GetInt(settingName, 0) != 0;
         }
 
         /// <summary>
@@ -278,21 +201,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override bool GetBool(string settingName, bool defaultValue)
         {
-#if UNITY_EDITOR
-            return UnityEngine.PlayerPrefs.GetInt(settingName, defaultValue ? 1 : 0) != 0;
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            return TTSDK.TTStorage.GetIntSync(settingName, defaultValue ? 1 : 0) != 0;
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetIntSync(settingName, defaultValue ? 1 : 0) != 0;
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            return KSWASM.KSBase.StorageGetIntSync(settingName, defaultValue ? 1 : 0) != 0;
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            var value = AlipaySdk.AlipaySDK.API.GetStorageSync(settingName);
-            return string.IsNullOrWhiteSpace(value) ? defaultValue : Convert.ToInt32(value) != 0;
-#else
-            return UnityEngine.PlayerPrefs.GetInt(settingName, defaultValue ? 1 : 0) != 0;
-#endif
+            return StorageBackend.GetInt(settingName, defaultValue ? 1 : 0) != 0;
         }
 
         /// <summary>
@@ -306,21 +215,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetBool(string settingName, bool value)
         {
-#if UNITY_EDITOR
-            UnityEngine.PlayerPrefs.SetInt(settingName, value ? 1 : 0);
-            return;
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            TTSDK.TTStorage.SetIntSync(settingName, value ? 1 : 0);
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            WeChatWASM.WXSDKManagerHandler.Instance.StorageSetIntSync(settingName, value ? 1 : 0);
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            KSWASM.KSBase.StorageSetIntSync(settingName, value ? 1 : 0);
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            AlipaySdk.AlipaySDK.API.SetStorageSync(settingName, (value ? 1 : 0).ToString());
-#else
-            UnityEngine.PlayerPrefs.SetInt(settingName, value ? 1 : 0);
-#endif
+            StorageBackend.SetInt(settingName, value ? 1 : 0);
         }
 
         /// <summary>
@@ -334,21 +229,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override int GetInt(string settingName)
         {
-#if UNITY_EDITOR
-            return UnityEngine.PlayerPrefs.GetInt(settingName);
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            return TTSDK.TTStorage.GetIntSync(settingName, 0);
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetIntSync(settingName, 0);
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            return KSWASM.KSBase.StorageGetIntSync(settingName, 0);
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            var value = AlipaySdk.AlipaySDK.API.GetStorageSync(settingName);
-            return string.IsNullOrWhiteSpace(value) ? 0 : Convert.ToInt32(value);
-#else
-            return UnityEngine.PlayerPrefs.GetInt(settingName);
-#endif
+            return StorageBackend.GetInt(settingName, 0);
         }
 
         /// <summary>
@@ -363,21 +244,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override int GetInt(string settingName, int defaultValue)
         {
-#if UNITY_EDITOR
-            return UnityEngine.PlayerPrefs.GetInt(settingName, defaultValue);
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            return TTSDK.TTStorage.GetIntSync(settingName, defaultValue);
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetIntSync(settingName, defaultValue);
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            return KSWASM.KSBase.StorageGetIntSync(settingName, defaultValue);
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            var value = AlipaySdk.AlipaySDK.API.GetStorageSync(settingName);
-            return string.IsNullOrWhiteSpace(value) ? defaultValue : Convert.ToInt32(value);
-#else
-            return UnityEngine.PlayerPrefs.GetInt(settingName, defaultValue);
-#endif
+            return StorageBackend.GetInt(settingName, defaultValue);
         }
 
         /// <summary>
@@ -391,21 +258,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetInt(string settingName, int value)
         {
-#if UNITY_EDITOR
-            UnityEngine.PlayerPrefs.SetInt(settingName, value);
-            return;
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            TTSDK.TTStorage.SetIntSync(settingName, value);
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            WeChatWASM.WXSDKManagerHandler.Instance.StorageSetIntSync(settingName, value);
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            KSWASM.KSBase.StorageSetIntSync(settingName, value);
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            AlipaySdk.AlipaySDK.API.SetStorageSync(settingName, value.ToString());
-#else
-            UnityEngine.PlayerPrefs.SetInt(settingName, value);
-#endif
+            StorageBackend.SetInt(settingName, value);
         }
 
         /// <summary>
@@ -419,21 +272,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override float GetFloat(string settingName)
         {
-#if UNITY_EDITOR
-            return UnityEngine.PlayerPrefs.GetFloat(settingName);
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            return TTSDK.TTStorage.GetFloatSync(settingName, 0f);
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetFloatSync(settingName, 0f);
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            return KSWASM.KSBase.StorageGetFloatSync(settingName, 0f);
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            var value = AlipaySdk.AlipaySDK.API.GetStorageSync(settingName);
-            return string.IsNullOrWhiteSpace(value) ? 0f : Convert.ToSingle(value);
-#else
-            return UnityEngine.PlayerPrefs.GetFloat(settingName);
-#endif
+            return StorageBackend.GetFloat(settingName, 0f);
         }
 
         /// <summary>
@@ -448,21 +287,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override float GetFloat(string settingName, float defaultValue)
         {
-#if UNITY_EDITOR
-            return UnityEngine.PlayerPrefs.GetFloat(settingName, defaultValue);
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            return TTSDK.TTStorage.GetFloatSync(settingName, defaultValue);
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetFloatSync(settingName, defaultValue);
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            return KSWASM.KSBase.StorageGetFloatSync(settingName, defaultValue);
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            var value = AlipaySdk.AlipaySDK.API.GetStorageSync(settingName);
-            return string.IsNullOrWhiteSpace(value) ? defaultValue : Convert.ToSingle(value);
-#else
-            return UnityEngine.PlayerPrefs.GetFloat(settingName, defaultValue);
-#endif
+            return StorageBackend.GetFloat(settingName, defaultValue);
         }
 
         /// <summary>
@@ -476,21 +301,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetFloat(string settingName, float value)
         {
-#if UNITY_EDITOR
-            UnityEngine.PlayerPrefs.SetFloat(settingName, value);
-            return;
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            TTSDK.TTStorage.SetFloatSync(settingName, value);
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            WeChatWASM.WXSDKManagerHandler.Instance.StorageSetFloatSync(settingName, value);
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            KSWASM.KSBase.StorageSetFloatSync(settingName, value);
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            AlipaySdk.AlipaySDK.API.SetStorageSync(settingName, value.ToString(System.Globalization.CultureInfo.InvariantCulture));
-#else
-            UnityEngine.PlayerPrefs.SetFloat(settingName, value);
-#endif
+            StorageBackend.SetFloat(settingName, value);
         }
 
         /// <summary>
@@ -504,21 +315,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override string GetString(string settingName)
         {
-#if UNITY_EDITOR
-            return UnityEngine.PlayerPrefs.GetString(settingName, string.Empty);
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            return TTSDK.TTStorage.GetStringSync(settingName, string.Empty);
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetStringSync(settingName, string.Empty);
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            return KSWASM.KSBase.StorageGetStringSync(settingName, string.Empty);
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            var value = AlipaySdk.AlipaySDK.API.GetStorageSync(settingName);
-            return string.IsNullOrWhiteSpace(value) ? string.Empty : value;
-#else
-            return UnityEngine.PlayerPrefs.GetString(settingName, string.Empty);
-#endif
+            return StorageBackend.GetString(settingName, string.Empty);
         }
 
         /// <summary>
@@ -533,21 +330,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override string GetString(string settingName, string defaultValue)
         {
-#if UNITY_EDITOR
-            return UnityEngine.PlayerPrefs.GetString(settingName, defaultValue);
-#endif
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            return TTSDK.TTStorage.GetStringSync(settingName, defaultValue);
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            return WeChatWASM.WXSDKManagerHandler.Instance.StorageGetStringSync(settingName, defaultValue);
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            return KSWASM.KSBase.StorageGetStringSync(settingName, defaultValue);
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            var value = AlipaySdk.AlipaySDK.API.GetStorageSync(settingName);
-            return string.IsNullOrWhiteSpace(value) ? defaultValue : value;
-#else
-            return UnityEngine.PlayerPrefs.GetString(settingName, defaultValue);
-#endif
+            return StorageBackend.GetString(settingName, defaultValue);
         }
 
         /// <summary>
@@ -561,22 +344,7 @@ namespace GameFrameX.Setting.Runtime
         [UnityEngine.Scripting.Preserve]
         public override void SetString(string settingName, string value)
         {
-#if UNITY_EDITOR
-            UnityEngine.PlayerPrefs.SetString(settingName, value);
-            return;
-#endif
-
-#if UNITY_WEBGL && ENABLE_DOUYIN_MINI_GAME
-            TTSDK.TTStorage.SetStringSync(settingName, value);
-#elif UNITY_WEBGL && ENABLE_WECHAT_MINI_GAME
-            WeChatWASM.WXSDKManagerHandler.Instance.StorageSetStringSync(settingName, value);
-#elif UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME
-            KSWASM.KSBase.StorageSetStringSync(settingName, value);
-#elif UNITY_WEBGL && ENABLE_ALIPAY_MINI_GAME
-            AlipaySdk.AlipaySDK.API.SetStorageSync(settingName, value);
-#else
-            UnityEngine.PlayerPrefs.SetString(settingName, value);
-#endif
+            StorageBackend.SetString(settingName, value);
         }
 
         /// <summary>

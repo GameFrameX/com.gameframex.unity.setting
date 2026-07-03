@@ -2,10 +2,7 @@
     "name": "GameFrameX.Setting.Runtime",
     "rootNamespace": "GameFrameX.Setting.Runtime",
     "references": [
-        "GameFrameX.Runtime",
-        "Wx",
-        "TTWebGL",
-        "kuaishou.runtime"
+        "GameFrameX.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
