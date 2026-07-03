@@ -1,0 +1,20 @@
+{
+    "name": "GameFrameX.Setting.DouYinMiniGame.Runtime",
+    "rootNamespace": "GameFrameX.Setting.Runtime",
+    "references": [
+        "GameFrameX.Setting.Runtime",
+        "TTWebGL"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_WEBGL",
+        "ENABLE_DOUYIN_MINI_GAME"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
