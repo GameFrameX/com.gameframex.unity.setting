@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.6.0...1.6.1) (2026-07-30)
+
+
+### Bug Fixes
+
+* **dependencies:** 更新 com.gameframex.unity 依赖版本至 2.5.1 ([da85a5a](https://github.com/gameframex/com.gameframex.unity.setting/commit/da85a5a2bf0da35bcb2e62b7d2ff0d150a77f052))
+
 # [1.6.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.5.3...1.6.0) (2026-07-03)
 
 
