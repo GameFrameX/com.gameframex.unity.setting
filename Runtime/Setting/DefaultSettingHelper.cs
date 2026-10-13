@@ -512,7 +512,7 @@ namespace GameFrameX.Setting.Runtime
 
         private void Awake()
         {
-            m_FilePath = Utility.Path.GetRegularPath(Path.Combine(Application.persistentDataPath, SettingFileName));
+            m_FilePath = PathHelper.NormalizePath(Path.Combine(Application.persistentDataPath, SettingFileName));
             m_Settings = new DefaultSetting();
             m_Serializer = new DefaultSettingSerializer();
             m_Serializer.RegisterSerializeCallback(0, SerializeDefaultSettingCallback);
