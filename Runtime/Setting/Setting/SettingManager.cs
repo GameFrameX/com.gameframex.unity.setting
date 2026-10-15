@@ -40,7 +40,7 @@ namespace GameFrameX.Setting.Runtime
     /// Game setting manager.
     /// </remarks>
     [UnityEngine.Scripting.Preserve]
-    public sealed class SettingManager : GameFrameworkModule, ISettingManager
+    public sealed class SettingManager : IGameFrameworkModule, ISettingManager, IShutdownableModule
     {
         private ISettingHelper m_SettingHelper;
 
@@ -92,25 +92,20 @@ namespace GameFrameX.Setting.Runtime
         }
 
         /// <summary>
-        /// 游戏配置管理器轮询。
-        /// </summary>
-        /// <remarks>
-        /// Updates the game setting manager each frame.
-        /// </remarks>
-        /// <param name="elapseSeconds">逻辑流逝时间，以秒为单位 / Elapsed time in seconds since last update</param>
-        /// <param name="realElapseSeconds">真实流逝时间，以秒为单位 / Real elapsed time in seconds since last update</param>
-        protected override void Update(float elapseSeconds, float realElapseSeconds)
-        {
-        }
-
-        /// <summary>
         /// 关闭并清理游戏配置管理器。
         /// </summary>
         /// <remarks>
         /// Shuts down and cleans up the game setting manager.
         /// </remarks>
-        protected override void Shutdown()
+        [UnityEngine.Scripting.Preserve]
+        public void Shutdown()
         {
+            // Shutdown 必须可安全重入：helper 未注入（启动期全量实例化后尚未接线）时直接返回，不抛异常。
+            if (m_SettingHelper == null)
+            {
+                return;
+            }
+
             Save();
         }
 
