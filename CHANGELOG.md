@@ -1,3 +1,17 @@
+# [2.0.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.6.1...2.0.0) (2026-10-15)
+
+
+* feat(module)!: SettingManager 迁移模块接口契约 ([55aa668](https://github.com/gameframex/com.gameframex.unity.setting/commit/55aa6684800389e08fe1f07a2f998a09619c666b))
+* feat(module)!: 组件薄入口化并新增 SettingOptions 启动配置 ([a37c896](https://github.com/gameframex/com.gameframex.unity.setting/commit/a37c896fb7e92c25b90d5154e074d75e8e1cbe9a))
+* feat(setting)!: 小游戏存储后端拆分为独立渠道包 ([24ad0d6](https://github.com/gameframex/com.gameframex.unity.setting/commit/24ad0d6eee6a4d9d645591b001ebf859f52523aa))
+
+
+### BREAKING CHANGES
+
+* 编辑期配置入口收敛到代码 SettingOptions，Play 期经活视图/模块 API 调整。
+* 小游戏工程需按平台加装 com.gameframex.unity.setting.wechatminigame 等渠道包；非小游戏工程无需改动（回落 Unity PlayerPrefs）。
+* 模块契约全接口化，能力方法改由宿主入口调用。
+
 ## [Unreleased]
 
 ### ⚠ BREAKING CHANGES
