@@ -31,7 +31,7 @@ All-in-One Solution for Indie Game Development · Empowering Indie Developers' D
 
 - Typed key-value storage: `bool`, `int`, `float`, `string`, serializable objects (via JSON)
 - Two built-in storage backends:
-  - **PlayerPrefsSettingHelper** (default) — uses Unity PlayerPrefs, with platform adapters for Douyin, WeChat, Kuaishou, and Alipay mini-games
+  - **PlayerPrefsSettingHelper** (default) — uses Unity PlayerPrefs; storage adapters for Douyin, WeChat, Kuaishou, and Alipay mini-games are provided by separate channel packages (see "Supported Platforms")
   - **DefaultSettingHelper** — file-based binary storage at `Application.persistentDataPath`
 - Pluggable helper architecture — implement `ISettingHelper` for custom backends
 - Auto-load on start, auto-save on shutdown
@@ -66,7 +66,7 @@ Choose one of the following methods:
        }
      ],
      "dependencies": {
-       "com.gameframex.unity.setting": "1.5.2"
+       "com.gameframex.unity.setting": "3.0.0"
      }
    }
    ```
@@ -135,7 +135,14 @@ Or assign a custom `ISettingHelper` via the **Custom Setting Helper** field.
 | PlayerPrefsSettingHelper | PlayerPrefs | TTStorage | WX SDK | KS SDK | Alipay SDK |
 | DefaultSettingHelper | File I/O | File I/O | File I/O | File I/O | File I/O |
 
-Mini-game storage support is isolated in platform adapter assemblies. The common `GameFrameX.Setting.Runtime` assembly only depends on `GameFrameX.Runtime`; install the matching mini-game SDK and enable its scripting define (`ENABLE_DOUYIN_MINI_GAME`, `ENABLE_WECHAT_MINI_GAME`, `ENABLE_KUAISHOU_MINI_GAME`, or `ENABLE_ALIPAY_MINI_GAME`) to compile the corresponding adapter.
+Since 3.0.0 the four mini-game storage backends ship as separate channel packages: `com.gameframex.unity.setting.wechatminigame`, `com.gameframex.unity.setting.douyinminigame`, `com.gameframex.unity.setting.kuaishouminigame`, and `com.gameframex.unity.setting.alipayminigame` (each gated by asmdef `defineConstraints`: `UNITY_WEBGL + ENABLE_*_MINI_GAME`, so they do not compile in non-mini-game projects). The common `GameFrameX.Setting.Runtime` assembly only depends on `GameFrameX.Runtime`.
+
+### Breaking Changes in 3.0.0
+
+- The mini-game storage adapters embedded in the main package `Runtime/MiniGame/` in 2.x have moved into the four channel packages above. **Mini-game projects must add the channel package matching their platform** (together with the platform mini-game SDK) to `manifest.json`; no other code changes are required — the adapter still self-registers during `SubsystemRegistration` (reference implies registration).
+- `ISettingStorageBackend` and `SettingStorageBackendFactory` are now `public`: custom storage backends can implement the contract and call `RegisterMiniGameBackend` directly, without `InternalsVisibleTo` bridging.
+- `RegisterMiniGameBackend` keeps the first registration and logs a warning on duplicates (at most one storage backend per runtime environment).
+- Standard Unity projects (non-mini-game) need no changes: without a registered channel package the behavior is identical to 2.x (Editor and device both fall back to Unity PlayerPrefs).
 
 ## API Reference
 

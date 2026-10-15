@@ -31,7 +31,7 @@
 
 - 类型化键值存储：`bool`、`int`、`float`、`string`、可序列化对象（JSON）
 - 两种内置存储后端：
-  - **PlayerPrefsSettingHelper**（默认）— 使用 Unity PlayerPrefs，适配抖音、微信、快手、支付宝小游戏平台
+  - **PlayerPrefsSettingHelper**（默认）— 使用 Unity PlayerPrefs；抖音、微信、快手、支付宝小游戏平台的存储适配由独立渠道包提供（见下文"平台支持"）
   - **DefaultSettingHelper** — 基于 `Application.persistentDataPath` 的文件二进制存储
 - 可插拔 Helper 架构 — 实现 `ISettingHelper` 接口即可自定义后端
 - 启动时自动加载，关闭时自动保存
@@ -66,7 +66,7 @@ SettingComponent (MonoBehaviour)
        }
      ],
      "dependencies": {
-       "com.gameframex.unity.setting": "1.5.2"
+       "com.gameframex.unity.setting": "3.0.0"
      }
    }
    ```
@@ -134,6 +134,15 @@ setting.RemoveAllSettings();
 |------|:-:|:-:|:-:|:-:|:-:|
 | PlayerPrefsSettingHelper | PlayerPrefs | TTStorage | WX SDK | KS SDK | Alipay SDK |
 | DefaultSettingHelper | 文件 I/O | 文件 I/O | 文件 I/O | 文件 I/O | 文件 I/O |
+
+自 3.0.0 起，四个小游戏存储后端拆分为独立渠道包：`com.gameframex.unity.setting.wechatminigame`、`com.gameframex.unity.setting.douyinminigame`、`com.gameframex.unity.setting.kuaishouminigame`、`com.gameframex.unity.setting.alipayminigame`（各自携带 asmdef `defineConstraints`：`UNITY_WEBGL + ENABLE_*_MINI_GAME`，非小游戏工程不编译）。公共程序集 `GameFrameX.Setting.Runtime` 仅依赖 `GameFrameX.Runtime`。
+
+### 3.0.0 破坏性变更与迁移
+
+- 2.x 内嵌在主包 `Runtime/MiniGame/` 的小游戏存储适配器已移至上述 4 个渠道包。**小游戏工程需在 manifest 按平台加装对应渠道包**（连同平台小游戏 SDK）；除此之外无需代码改动——适配器仍在 `SubsystemRegistration` 阶段自注册，引用即注册。
+- `ISettingStorageBackend` / `SettingStorageBackendFactory` 契约改为 `public`：自定义存储后端可直接实现契约并调用 `RegisterMiniGameBackend` 注册，不再依赖 `InternalsVisibleTo` 桥接。
+- `RegisterMiniGameBackend` 重复注册时保留首个并输出 Warning（存储后端为"每运行环境至多一个"的互斥语义）。
+- 非小游戏的标准 Unity 工程无需任何改动：未注册渠道包时行为与 2.x 完全一致（Editor 与真机均回落 Unity PlayerPrefs）。
 
 ## API 参考
 

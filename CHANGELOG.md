@@ -1,3 +1,52 @@
+## [Unreleased]
+
+### ⚠ BREAKING CHANGES
+
+* **module:** 新增 `SettingOptions` 启动配置（`GameFrameXOptions.Configure`，首场景加载前注入；字段默认值同原 Inspector 序列化默认）
+* **module:** 组件值参数序列化字段移除，编辑期配置入口收敛到代码 Options；Play 期经活视图 / 模块 API 调整
+* **module:** Helper 实现选择从类型名字符串改为 `Func` 工厂闭包（Custom 引用优先）
+
+# [3.0.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/2.0.0...3.0.0) (2026-10-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **setting:** 小游戏存储后端拆分为独立渠道包，主包不再内嵌小游戏实现
+
+**变更内容与迁移对照：**
+
+| 旧形态（2.x） | 新形态（3.0） | 迁移方式 |
+|---|---|---|
+| 主包 `Runtime/MiniGame/` 内嵌 4 个小游戏存储后端 | 拆为 4 个独立渠道包 | 小游戏工程按平台加装 `com.gameframex.unity.setting.wechatminigame` / `.douyinminigame` / `.kuaishouminigame` / `.alipayminigame`（连同平台小游戏 SDK），其余无需改动 |
+| `ISettingStorageBackend` / `SettingStorageBackendFactory` 为 internal，靠 `InternalsVisibleTo` 桥接小游戏程序集 | 契约 public 化 | 自定义存储后端直接实现 public 契约并调用 public 注册工厂，无需主包开放 internal |
+| `RegisterMiniGameBackend` 后写覆盖且无告警 | 重复注册保留首个 + Warning | 无需迁移；若工程同时编译两个渠道包，首个注册生效 |
+
+非小游戏的标准 Unity 工程无需任何改动：未注册渠道包时行为与 2.x 完全一致（Editor 与真机均回落 Unity PlayerPrefs）。
+
+### Features
+
+* **setting:** 存储后端注册契约 public 化 + 单槽注册幂等保护（保留首个 + Warning）
+
+# [2.0.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.6.1...2.0.0) (2026-10-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* **module:** 模块契约全接口化：删除 `GameFrameworkModule` 抽象基类，改为 `IGameFrameworkModule` 标记接口 + 可选能力接口
+
+**新契约形态与迁移对照：**
+
+| 旧基类成员 | 新契约 | 迁移方式 |
+|---|---|---|
+| `: GameFrameworkModule` | `IGameFrameworkModule` | 声明处直接替换（标记接口，可注册进 `GameFrameworkEntry`） |
+| `override void Update(float, float)` | `IUpdatableModule` | 真实实现改 `public`；空实现删除（未实现者不再被轮询） |
+| `override void Shutdown()` | `IShutdownableModule` | 真实实现改 `public`；空实现删除（未实现者不再被关闭） |
+| `override int Priority` | `IPrioritizedModule` | 改 `public int Priority { get; }`；未实现视为 0 |
+
+本包变更：`SettingManager` 实现 `IShutdownableModule`，删除空 `Update` 覆写。
+
+`GameFrameworkEntry.Update` 仅分派 `IUpdatableModule`；`Shutdown` 按优先级反序仅分派 `IShutdownableModule`；tick 与关闭顺序与旧实现完全一致。能力方法仅由宿主入口调用，业务侧继续通过 `GetModule<IXxxManager>()` 访问模块。
+
 ## [1.6.1](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.6.0...1.6.1) (2026-07-30)
 
 

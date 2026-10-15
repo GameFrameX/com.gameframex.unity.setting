@@ -31,7 +31,7 @@
 
 - 型付きキーバリューストレージ：`bool`、`int`、`float`、`string`、シリアライズ可能オブジェクト（JSON）
 - 2つの内蔵ストレージバックエンド：
-  - **PlayerPrefsSettingHelper**（デフォルト）— Unity PlayerPrefs を使用。Douyin、WeChat、Kuaishou、Alipay ミニゲーム向けプラットフォームアダプター搭載
+  - **PlayerPrefsSettingHelper**（デフォルト）— Unity PlayerPrefs を使用。Douyin、WeChat、Kuaishou、Alipay ミニゲーム向けのストレージアダプターは独立したチャネルパッケージで提供（下記「プラットフォーム対応」参照）
   - **DefaultSettingHelper** — `Application.persistentDataPath` によるファイルベースのバイナリストレージ
 - プラグイン可能な Helper アーキテクチャ — `ISettingHelper` を実装してカスタムバックエンドを作成可能
 - 起動時に自動ロード、終了時に自動セーブ
@@ -66,7 +66,7 @@ SettingComponent (MonoBehaviour)
        }
      ],
      "dependencies": {
-       "com.gameframex.unity.setting": "1.5.2"
+       "com.gameframex.unity.setting": "3.0.0"
      }
    }
    ```
@@ -134,6 +134,15 @@ setting.RemoveAllSettings();
 |-------------|:-:|:-:|:-:|:-:|:-:|
 | PlayerPrefsSettingHelper | PlayerPrefs | TTStorage | WX SDK | KS SDK | Alipay SDK |
 | DefaultSettingHelper | ファイル I/O | ファイル I/O | ファイル I/O | ファイル I/O | ファイル I/O |
+
+3.0.0 より、4 つのミニゲームストレージバックエンドは独立したチャネルパッケージ `com.gameframex.unity.setting.wechatminigame` / `.douyinminigame` / `.kuaishouminigame` / `.alipayminigame` に分割されました（各 asmdef は `defineConstraints: UNITY_WEBGL + ENABLE_*_MINI_GAME` を持ち、ミニゲーム以外のプロジェクトではコンパイルされません）。共通アセンブリ `GameFrameX.Setting.Runtime` は `GameFrameX.Runtime` のみに依存します。
+
+### 3.0.0 の破壊的変更と移行
+
+- 2.x でメインパッケージ `Runtime/MiniGame/` に内蔵されていたミニゲームストレージアダプターは上記 4 チャネルパッケージへ移動しました。**ミニゲームプロジェクトはプラットフォームに対応するチャネルパッケージ**（およびプラットフォームのミニゲーム SDK）を manifest に追加してください。それ以外のコード変更は不要です。アダプターはこれまで通り `SubsystemRegistration` タイミングで自己登録されます（参照即登録）。
+- `ISettingStorageBackend` / `SettingStorageBackendFactory` が `public` に変更されました。カスタムストレージバックエンドは `InternalsVisibleTo` ブリッジなしに契約を実装し、`RegisterMiniGameBackend` を直接呼び出せます。
+- `RegisterMiniGameBackend` は重複登録時に先頭を保持し Warning を出力します（ストレージバックエンドは「実行環境ごとに最大 1 つ」の排他セマンティクス）。
+- ミニゲーム以外の標準 Unity プロジェクトは変更不要です。チャネルパッケージ未登録時の動作は 2.x と完全に同一です（Editor・実機とも Unity PlayerPrefs へフォールバック）。
 
 ## API リファレンス
 

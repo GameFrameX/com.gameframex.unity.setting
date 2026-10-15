@@ -58,6 +58,9 @@ namespace GameFrameX.Setting.Runtime
             _ = typeof(ISettingHelper);
             _ = typeof(ISettingManager);
             _ = typeof(SettingManager);
+            _ = typeof(SettingStorageBackendFactory);
+            _ = typeof(ISettingStorageBackend);
+            _ = typeof(UnityPlayerPrefsSettingStorage);
         }
     }
 }

@@ -31,7 +31,7 @@
 
 - 타입화된 키-값 저장소: `bool`, `int`, `float`, `string`, 직렬화 가능 객체 (JSON)
 - 두 가지 내장 스토리지 백엔드:
-  - **PlayerPrefsSettingHelper** (기본) — Unity PlayerPrefs 사용, Douyin, WeChat, Kuaishou, Alipay 미니게임 플랫폼 어댑터 포함
+  - **PlayerPrefsSettingHelper** (기본) — Unity PlayerPrefs 사용. Douyin, WeChat, Kuaishou, Alipay 미니게임용 스토리지 어댑터는 별도의 채널 패키지로 제공 (아래 "플랫폼 지원" 참조)
   - **DefaultSettingHelper** — `Application.persistentDataPath` 기반 파일 바이너리 스토리지
 - 플러그인 가능한 Helper 아키텍처 — `ISettingHelper`를 구현하여 커스텀 백엔드 생성 가능
 - 시작 시 자동 로드, 종료 시 자동 저장
@@ -66,7 +66,7 @@ SettingComponent (MonoBehaviour)
        }
      ],
      "dependencies": {
-       "com.gameframex.unity.setting": "1.5.2"
+       "com.gameframex.unity.setting": "3.0.0"
      }
    }
    ```
@@ -134,6 +134,15 @@ setting.RemoveAllSettings();
 |--------|:-:|:-:|:-:|:-:|:-:|
 | PlayerPrefsSettingHelper | PlayerPrefs | TTStorage | WX SDK | KS SDK | Alipay SDK |
 | DefaultSettingHelper | 파일 I/O | 파일 I/O | 파일 I/O | 파일 I/O | 파일 I/O |
+
+3.0.0부터 4개 미니게임 스토리지 백엔드는 독립적인 채널 패키지 `com.gameframex.unity.setting.wechatminigame` / `.douyinminigame` / `.kuaishouminigame` / `.alipayminigame`로 분리되었습니다 (각 asmdef는 `defineConstraints: UNITY_WEBGL + ENABLE_*_MINI_GAME`를 가지며, 미니게임이 아닌 프로젝트에서는 컴파일되지 않습니다). 공통 어셈블리 `GameFrameX.Setting.Runtime`은 `GameFrameX.Runtime`에만 의존합니다.
+
+### 3.0.0 파괴적 변경 및 마이그레이션
+
+- 2.x에서 메인 패키지 `Runtime/MiniGame/`에 내장되어 있던 미니게임 스토리지 어댑터가 위 4개 채널 패키지로 이동되었습니다. **미니게임 프로젝트는 플랫폼에 맞는 채널 패키지**(플랫폼 미니게임 SDK 포함)를 manifest에 추가해야 합니다. 그 외의 코드 변경은 필요 없습니다. 어댑터는 여전히 `SubsystemRegistration` 단계에서 자동 등록됩니다(참조 곧 등록).
+- `ISettingStorageBackend` / `SettingStorageBackendFactory` 계약이 `public`으로 변경되었습니다. 커스텀 스토리지 백엔드는 `InternalsVisibleTo` 브리지 없이 계약을 구현하고 `RegisterMiniGameBackend`를 직접 호출할 수 있습니다.
+- `RegisterMiniGameBackend`는 중복 등록 시 첫 번째 등록을 유지하고 Warning을 출력합니다(스토리지 백엔드는 "실행 환경당 최대 1개"의 상호 배타적 의미론).
+- 미니게임이 아닌 표준 Unity 프로젝트는 변경이 필요 없습니다. 채널 패키지가 등록되지 않은 경우 동작은 2.x와 완전히 동일합니다(Editor 및 기기 모두 Unity PlayerPrefs로 폴백).
 
 ## API 참조
 
