@@ -37,7 +37,7 @@ namespace GameFrameX.Setting.Editor
     [CustomEditor(typeof(SettingComponent))]
     internal sealed class SettingComponentInspector : ComponentTypeComponentInspector
     {
-        private HelperInfo<SettingHelperBase> m_SettingHelperInfo = new HelperInfo<SettingHelperBase>("Setting");
+        private SerializedProperty m_CustomSettingHelper = null;
 
         public override void OnInspectorGUI()
         {
@@ -45,9 +45,12 @@ namespace GameFrameX.Setting.Editor
 
             SettingComponent t = (SettingComponent)target;
 
+            // C9 活视图：编辑态提示 SettingOptions 入口；Play 态只读显示 Helper 工厂（启动期型）。
+            GameFrameXOptionsLiveViewUtility.DrawLiveView(t, typeof(SettingOptions));
+
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
-                m_SettingHelperInfo.Draw();
+                EditorGUILayout.PropertyField(m_CustomSettingHelper);
             }
             EditorGUI.EndDisabledGroup();
 
@@ -86,14 +89,14 @@ namespace GameFrameX.Setting.Editor
         {
             base.OnCompileComplete();
 
-            _RefreshTypeNames();
+            serializedObject.ApplyModifiedProperties();
         }
 
         protected override void Enable()
         {
-            m_SettingHelperInfo.Init(serializedObject);
+            m_CustomSettingHelper = serializedObject.FindProperty("m_CustomSettingHelper");
 
-            _RefreshTypeNames();
+            RefreshTypeNames();
         }
 
         protected override void RefreshTypeNames()
@@ -101,10 +104,5 @@ namespace GameFrameX.Setting.Editor
             RefreshComponentTypeNames(typeof(ISettingManager));
         }
 
-        private void _RefreshTypeNames()
-        {
-            m_SettingHelperInfo.Refresh();
-            serializedObject.ApplyModifiedProperties();
-        }
     }
 }

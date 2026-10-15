@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using GameFrameX.Runtime;
 using GameFrameX.Setting.Runtime;
 using NUnit.Framework;
 using UnityEngine;
@@ -23,8 +25,9 @@ namespace GameFrameX.Setting.Tests
         [TearDown]
         public void TearDown()
         {
-            Object.DestroyImmediate(m_GameObject);
+            UnityEngine.Object.DestroyImmediate(m_GameObject);
             SettingStorageBackendFactory.ResetMiniGameBackendForTests();
+            GameFrameXOptions.Reset(); // 清除 Options 注册，避免跨用例静态泄漏
         }
 
         [Test]
@@ -72,6 +75,41 @@ namespace GameFrameX.Setting.Tests
             Assert.That(m_Backend.HasKey("score"), Is.False);
             Assert.That(m_Backend.HasKey("name"), Is.False);
             Assert.That(m_Backend.DeleteAllCallCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void SettingStorageBackendFactory_DuplicateRegistration_KeepsFirstAndWarns()
+        {
+            Func<ISettingStorageBackend> first = () => m_Backend;
+            Func<ISettingStorageBackend> second = () => new FakeSettingStorageBackend();
+
+            SettingStorageBackendFactory.RegisterMiniGameBackend(first);
+            SettingStorageBackendFactory.RegisterMiniGameBackend(second);
+
+            Assert.That(SettingStorageBackendFactory.MiniGameBackendFactoryForTests, Is.SameAs(first), "重复注册应保留首个后端工厂");
+        }
+
+        [Test]
+        public void SettingStorageBackendFactory_NullFactory_Throws()
+        {
+            Assert.Throws<GameFrameworkException>(() => SettingStorageBackendFactory.RegisterMiniGameBackend(null));
+            Assert.That(SettingStorageBackendFactory.MiniGameBackendFactoryForTests, Is.Null);
+        }
+
+        [Test]
+        public void SettingStorageBackendFactory_CreateWithoutRegistration_FallsBackToPlayerPrefs()
+        {
+            Assert.IsInstanceOf<UnityPlayerPrefsSettingStorage>(SettingStorageBackendFactory.Create());
+        }
+
+        [Test]
+        public void SettingStorageBackendFactory_Reset_ClearsRegistration()
+        {
+            SettingStorageBackendFactory.RegisterMiniGameBackend(() => m_Backend);
+
+            SettingStorageBackendFactory.ResetMiniGameBackendForTests();
+
+            Assert.That(SettingStorageBackendFactory.MiniGameBackendFactoryForTests, Is.Null);
         }
 
         private sealed class FakeSettingStorageBackend : ISettingStorageBackend
@@ -143,5 +181,29 @@ namespace GameFrameX.Setting.Tests
                 m_StringValues[key] = value;
             }
         }
+
+        #region SettingOptions
+
+        /// <summary>
+        /// 验证 SettingOptions 经 GameFrameXOptions 注入差异值后可回读，且默认工厂产出默认实现。
+        /// </summary>
+        [Test]
+        public void SettingOptions_ConfigureAndTryGet_RoundTripsDiffs()
+        {
+            Func<SettingHelperBase> settingHelperFactory = () => null;
+            GameFrameXOptions.Reset();
+            GameFrameXOptions.Configure(new SettingOptions { SettingHelperFactory = settingHelperFactory });
+
+            Assert.IsTrue(GameFrameXOptions.TryGet<SettingOptions>(out var options));
+            Assert.That(options.SettingHelperFactory, Is.SameAs(settingHelperFactory));
+
+            GameFrameXOptions.Reset();
+            var defaults = new SettingOptions();
+            var settingHelper = defaults.SettingHelperFactory();
+            Assert.That(settingHelper, Is.InstanceOf<PlayerPrefsSettingHelper>());
+            UnityEngine.Object.DestroyImmediate(settingHelper);
+        }
+
+        #endregion
     }
 }

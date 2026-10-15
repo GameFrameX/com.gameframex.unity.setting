@@ -49,7 +49,7 @@ namespace GameFrameX.Setting.Runtime
     {
         private ISettingManager m_SettingManager = null;
 
-        [SerializeField] private string m_SettingHelperTypeName = "GameFrameX.Setting.Runtime.PlayerPrefsSettingHelper";
+        private Func<SettingHelperBase> m_SettingHelperFactory = () => new GameObject().AddComponent<PlayerPrefsSettingHelper>();
 
         [SerializeField] private SettingHelperBase m_CustomSettingHelper = null;
 
@@ -76,6 +76,10 @@ namespace GameFrameX.Setting.Runtime
         {
             ImplementationComponentType = Utility.Assembly.GetType(componentType);
             InterfaceComponentType = typeof(ISettingManager);
+            if (GameFrameXOptions.TryGet<SettingOptions>(out var settingOptions))
+            {
+                m_SettingHelperFactory = settingOptions.SettingHelperFactory;
+            }
             base.Awake();
             m_SettingManager = GameFrameworkEntry.GetModule<ISettingManager>();
             if (m_SettingManager == null)
@@ -84,7 +88,7 @@ namespace GameFrameX.Setting.Runtime
                 return;
             }
 
-            SettingHelperBase settingHelper = Helper.CreateHelper(m_SettingHelperTypeName, m_CustomSettingHelper);
+            SettingHelperBase settingHelper = Helper.CreateHelper(m_SettingHelperFactory, m_CustomSettingHelper);
             if (settingHelper == null)
             {
                 Log.Error("Can not create setting helper.");
