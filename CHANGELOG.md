@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/2.0.1...2.1.0) (2026-11-10)
+
+
+### Features
+
+* **setting:** 新增存档文件存储整文件读写通道 ([17a119a](https://github.com/gameframex/com.gameframex.unity.setting/commit/17a119ad41b7b75ef14601ace52477debf28e047))
+
 ## [2.0.1](https://github.com/gameframex/com.gameframex.unity.setting/compare/2.0.0...2.0.1) (2026-11-10)
 
 
