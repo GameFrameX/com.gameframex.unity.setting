@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/gameframex/com.gameframex.unity.setting/compare/2.0.0...2.0.1) (2026-11-10)
+
+
+### Bug Fixes
+
+* **setting:** 添加完整 link.xml 防代码裁剪保护 ([09eb21a](https://github.com/gameframex/com.gameframex.unity.setting/commit/09eb21ab7a88302e4f881a5e3472bb1566b979e1))
+
 # [2.0.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/1.6.1...2.0.0) (2026-10-15)
 
 
