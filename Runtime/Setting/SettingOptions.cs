@@ -46,5 +46,12 @@ namespace GameFrameX.Setting.Runtime
         /// <remarks>启动期型：仅在组件 Awake 创建辅助器时消费，运行期不可修改。</remarks>
         [GameFrameXStartupOnly]
         public Func<SettingHelperBase> SettingHelperFactory = () => new GameObject().AddComponent<PlayerPrefsSettingHelper>();
+
+        /// <summary>
+        /// 存档文件存储根目录（默认 <c>{Application.persistentDataPath}/SaveSlotFileStorage</c>，仅在首次创建存档文件存储后端时消费）。
+        /// </summary>
+        /// <remarks>启动期型：为 null 时使用工厂默认根目录；必须在首次访问存档文件存储前注入。</remarks>
+        [GameFrameXStartupOnly]
+        public string SaveSlotFileStorageRoot = null;
     }
 }

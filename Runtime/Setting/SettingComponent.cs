@@ -45,7 +45,7 @@ namespace GameFrameX.Setting.Runtime
     [RequireComponent(typeof(GameFrameXSettingCroppingHelper))]
     [AddComponentMenu("GameFrameX/Setting")]
     [GameFrameXAutoComponent(-5000)]
-    public sealed class SettingComponent : GameFrameworkComponent
+    public sealed partial class SettingComponent : GameFrameworkComponent
     {
         private ISettingManager m_SettingManager = null;
 
@@ -79,6 +79,10 @@ namespace GameFrameX.Setting.Runtime
             if (GameFrameXOptions.TryGet<SettingOptions>(out var settingOptions))
             {
                 m_SettingHelperFactory = settingOptions.SettingHelperFactory;
+                if (!string.IsNullOrEmpty(settingOptions.SaveSlotFileStorageRoot))
+                {
+                    SaveSlotFileStorageBackendFactory.SetSaveSlotFileStorageRoot(settingOptions.SaveSlotFileStorageRoot);
+                }
             }
             base.Awake();
             m_SettingManager = GameFrameworkEntry.GetModule<ISettingManager>();
@@ -450,5 +454,6 @@ namespace GameFrameX.Setting.Runtime
         {
             m_SettingManager.SetObject(settingName, obj);
         }
+
     }
 }
