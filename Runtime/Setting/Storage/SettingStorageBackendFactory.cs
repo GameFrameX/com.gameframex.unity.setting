@@ -51,9 +51,13 @@ namespace GameFrameX.Setting.Runtime
         public static ISettingStorageBackend Create()
         {
 #if UNITY_EDITOR
-            return new UnityPlayerPrefsSettingStorage();
+            var backend = new UnityPlayerPrefsSettingStorage();
+            Log.Info("Setting storage backend created : '{0}'.", backend.GetType().FullName);
+            return backend;
 #else
-            return s_MiniGameBackendFactory == null ? new UnityPlayerPrefsSettingStorage() : s_MiniGameBackendFactory();
+            var backend = s_MiniGameBackendFactory == null ? new UnityPlayerPrefsSettingStorage() : s_MiniGameBackendFactory();
+            Log.Info("Setting storage backend created : '{0}'.", backend.GetType().FullName);
+            return backend;
 #endif
         }
 
