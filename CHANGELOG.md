@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/2.1.0...2.2.0) (2026-11-11)
+
+
+### Features
+
+* **setting:** 存储后端创建时输出日志 ([22f76be](https://github.com/gameframex/com.gameframex.unity.setting/commit/22f76be24df2c2399a602e646572e900eec456f7))
+
 # [2.1.0](https://github.com/gameframex/com.gameframex.unity.setting/compare/2.0.1...2.1.0) (2026-11-10)
 
 
